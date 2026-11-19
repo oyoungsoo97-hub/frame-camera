@@ -7,7 +7,7 @@ for group in ['Android-QA-31-phone','Android-QA-36-phone','Android-QA-36-fold']:
     assert len(screenshots) == 6, f'{group}: expected six screenshot files, got {len(screenshots)}'
 
 with zipfile.ZipFile('release-evidence/FRAME-2.1.0-QA-evidence.zip', 'w', zipfile.ZIP_DEFLATED) as archive:
-    for name in ['qa-run.json','qa-jobs.json','android-qa-run.json','android-qa-jobs.json','native-build-run.json','native-build-jobs.json']:
+    for name in ['qa-run.json','qa-jobs.json','android-qa-run.json','android-qa-jobs.json']:
         archive.write(name, name)
     for p in root.rglob('*'):
         if not p.is_file() or any(part.endswith('.xcresult') for part in p.parts):

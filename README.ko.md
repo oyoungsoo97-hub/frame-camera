@@ -1,4 +1,4 @@
-[2.1 스토어 준비 문서 및 네이티브 테스트 패키지](https://github.com/oyoungsoo97-hub/frame-camera/releases/tag/qa-evidence-44538808448-r2)
+[2.1 스토어 준비 문서 및 네이티브 테스트 패키지](https://github.com/oyoungsoo97-hub/frame-camera/releases/tag/qa-evidence-44545407442)
 
 > **2.1.0 스토어 출시 준비:** [테스트 상태 및 남은 절차](store/README.md). 실제 기기의 카메라 테스트와 배포 서명이 아직 필요합니다. v2.0.0 배포 파일은 이전 버전입니다.
 
@@ -8,7 +8,7 @@
 
 FRAME은 한 사람의 위치·구도·포즈를 실시간으로 안내하는 카메라 앱입니다. 영상은 기기에서 분석하며, **독일어·영어·한국어** UI와 안내·오류 메시지·접근성 라벨·음성 안내를 제공합니다.
 
-[웹 앱 열기](https://oyoungsoo97-hub.github.io/frame-camera/) · [네이티브 빌드 다운로드](https://github.com/oyoungsoo97-hub/frame-camera/releases/tag/qa-evidence-44538808448-r2)
+[웹 앱 열기](https://oyoungsoo97-hub.github.io/frame-camera/) · [네이티브 빌드 다운로드](https://github.com/oyoungsoo97-hub/frame-camera/releases/tag/qa-evidence-44545407442)
 
 ## 제공하는 형식
 

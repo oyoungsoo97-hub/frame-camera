@@ -9,10 +9,9 @@ jobs:
   package:
     runs-on: ubuntu-latest
     env:
-      QA_RUN: '44538808448'
-      ANDROID_QA_RUN: '44543392670'
-      NATIVE_BUILD_RUN: '44542772436'
-      EVIDENCE_TAG: 'qa-evidence-44538808448-r2'
+      QA_RUN: '44545407442'
+      ANDROID_QA_RUN: '44545407442'
+      EVIDENCE_TAG: 'qa-evidence-44545407442'
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
@@ -20,26 +19,25 @@ jobs:
           fetch-depth: 0
       - name: Retrieve completed run evidence
         run: |
-          for SPEC in "$QA_RUN:qa" "$ANDROID_QA_RUN:android-qa" "$NATIVE_BUILD_RUN:native-build"; do
+          for SPEC in "$QA_RUN:qa" "$ANDROID_QA_RUN:android-qa"; do
             RUN_ID=${SPEC%%:*}
             PREFIX=${SPEC#*:}
             gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID" > "$PREFIX-run.json"
             gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID/jobs?per_page=100" > "$PREFIX-jobs.json"
-            QA_TESTED_SHA=$(python3 -c 'import json,sys; r=json.load(open(sys.argv[1])); assert r["status"]=="completed", "QA run is still running"; print(r["head_sha"])' "$PREFIX-run.json")
+            QA_TESTED_SHA=$(python3 -c 'import json,sys; r=json.load(open(sys.argv[1])); assert r["status"]=="completed" and r["conclusion"]=="success", "QA run must finish successfully"; print(r["head_sha"])' "$PREFIX-run.json")
             git diff --exit-code "$QA_TESTED_SHA" HEAD -- dist ios android package.json package-lock.json capacitor.config.json
           done
           python3 scripts/ci/verify-evidence-jobs.py
-          gh run download "$QA_RUN" --pattern 'iOS-QA-*' --pattern 'FRAME-unsigned-device-archive' --dir evidence
+          gh run download "$QA_RUN" --pattern 'iOS-QA-*' --pattern 'FRAME-unsigned-device-archive' --pattern 'FRAME-iOS-Simulator' --dir evidence
           gh run download "$ANDROID_QA_RUN" --pattern 'Android-QA-*' --dir evidence
-          gh run download "$NATIVE_BUILD_RUN" --pattern 'FRAME-Android-debug' --pattern 'FRAME-iOS-Simulator' --dir native-evidence
       - name: Package reports, native screenshots and unsigned build samples
         run: |
           mkdir -p release-evidence
           python3 scripts/ci/package-evidence.py
           cp evidence/FRAME-unsigned-device-archive/FRAME-unsigned.xcarchive.zip release-evidence/FRAME-2.1.0-unsigned.xcarchive.zip
           cp evidence/Android-QA-36-phone/android/app/build/outputs/bundle/release/app-release.aab release-evidence/FRAME-2.1.0-unsigned.aab
-          cp native-evidence/FRAME-Android-debug/app-debug.apk release-evidence/FRAME-2.1.0-Android-debug.apk
-          cp native-evidence/FRAME-iOS-Simulator/FRAME-iOS-Simulator.app.zip release-evidence/FRAME-2.1.0-iOS-Simulator.app.zip
+          cp evidence/Android-QA-36-phone/android/app/build/outputs/apk/debug/app-debug.apk release-evidence/FRAME-2.1.0-Android-debug.apk
+          cp evidence/FRAME-iOS-Simulator/FRAME-iOS-Simulator.app.zip release-evidence/FRAME-2.1.0-iOS-Simulator.app.zip
           git archive --format=zip --prefix=FRAME/ HEAD -o release-evidence/FRAME-2.1.0-Web-iOS-Android-source.zip
           (cd dist && zip -qr ../release-evidence/FRAME-2.1.0-HTML.zip .)
           (cd store && zip -qr ../release-evidence/FRAME-2.1.0-Store-documents.zip .)
@@ -50,9 +48,9 @@ jobs:
           cat > notes.txt <<'NOTES'
           FRAME 2.1.0 is prepared for further Apple/Google store testing in German, English and Korean. Publisher decision: Youngsoo Oh, individual; €2.99 once; worldwide where store sales are allowed; no ads, subscription or in-app purchases.
 
-          Verified: 69 logic tests, 12 iOS simulator tests and 24 Android emulator tests. Production files are identical across the evidence commits. iOS: run 44538808448. Android: run 44543392670. Debug APK / simulator build: run 44542772436. Read all job metadata files and [the test report](https://github.com/oyoungsoo97-hub/frame-camera/blob/main/store/reports/TEST-REPORT.md).
+          Verified: 69 logic tests, 12 iOS simulator tests and 24 Android emulator tests. All five native configurations and the build samples come from run 44545407442, commit 33bd45fa5b75a22fc314e80cb35f0dab238d9ef7. The delivery commit has identical production app files. Read all job metadata files and [the test report](https://github.com/oyoungsoo97-hub/frame-camera/blob/main/store/reports/TEST-REPORT.md).
 
-          The full-pixel fold emulator stalled. Its replacement preserves logical viewport size at 906×1088 pixels / 210 dpi; physical Fold5 graphics, hinge and camera behavior remain untested. The original overall run is cancelled, while the selected iOS jobs passed.
+          The full-pixel fold emulator stalled. Its replacement preserves logical viewport size at 906×1088 pixels / 210 dpi; physical Fold5 graphics, hinge and camera behavior remain untested. The earlier full-pixel run was cancelled. The current complete matrix passes with the documented scaled configuration.
 
           Downloads include HTML, complete source, store documents, 30 actual native demo screenshots in the QA evidence ZIP, debug APK, iOS simulator app and unsigned native build samples. SHA256SUMS.txt verifies the files.
 
@@ -60,8 +58,9 @@ jobs:
           NOTES
           gh release create "$EVIDENCE_TAG" release-evidence/* --target "$GITHUB_SHA" --prerelease --latest=false --title "FRAME 2.1.0 · Store preparation and test evidence" --notes-file notes.txt
           cat > superseded.txt <<'NOTES'
-          Superseded by the corrected QA package: https://github.com/oyoungsoo97-hub/frame-camera/releases/tag/qa-evidence-44538808448-r2
+          Superseded by the visually corrected QA package: https://github.com/oyoungsoo97-hub/frame-camera/releases/tag/qa-evidence-44545407442
 
-          The tests in this earlier package passed as documented, but Android screenshots were lost when Gradle removed the test APK. The corrected package preserves and verifies six screenshots per Android configuration. This historical package is not a store release; all native samples are unsigned/testing only.
+          Later screenshot inspection found an empty full-screen photo frame on Android 12 / WebView 91 that the original functional assertions missed. The new package fixes the viewport fallback and requires nonzero photo/image geometry in native layout and screenshot checks. Do not use this earlier package for store submission. Physical-device acceptance and signing remain pending.
           NOTES
-          gh release edit "qa-evidence-$QA_RUN" --notes-file superseded.txt
+          gh release edit "qa-evidence-44538808448" --notes-file superseded.txt
+          gh release edit "qa-evidence-44538808448-r2" --notes-file superseded.txt

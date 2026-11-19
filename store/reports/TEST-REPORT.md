@@ -21,10 +21,9 @@ Stand: 19. November 2026. **Noch keine Store-Freigabe und keine Zertifizierung a
 
 ## Herkunft der Nachweise
 
-- **iOS:** [Lauf 44538808448](https://github.com/oyoungsoo97-hub/frame-camera/actions/runs/44538808448), Commit `1a80431d2850a072ffd5450731fc16d71a6db5e3`. Je sechs Tests auf iPhone und iPad; iPhone-Job einschließlich Gerätearchiv und Inhaltsprüfung. Der separate Android-Job mit voller Fold-Pixelzahl hing und ist kein erfolgreicher Test.
-- **Android:** [Lauf 44543392670](https://github.com/oyoungsoo97-hub/frame-camera/actions/runs/44543392670), Commit `f7dfae297d9c7ef9de3037af45c6c025df54c6f7`. Je acht Tests in drei Konfigurationen, insgesamt **24/24**. Die iOS-Jobs dieses gezielten Android-Laufs sind absichtlich übersprungen.
-- Die produktiven App-Dateien sind zwischen beiden Commits identisch. Android-CI-Auflösung, Testprozess-Zeitlimit, Screenshot-Übernahme und Dokumentation wurden verändert. Die Nachweise werden aus den tatsächlich erfolgreichen Jobs zusammengeführt; es wird kein vollständig grüner ursprünglicher Gesamtlauf behauptet.
-- Das [dauerhafte QA-Paket](https://github.com/oyoungsoo97-hub/frame-camera/releases/tag/qa-evidence-44538808448-r2) enthält beide Jobmetadaten, Protokolle, Paketprüfungen, native Demo-Screenshots und unsignierte Buildbeispiele. Der Paketierungsschritt prüft die ausdrücklich benötigten erfolgreichen Jobs sowie die Gleichheit der produktiven App-Dateien. Es ist keine Store-Veröffentlichung.
+Die vollständige Matrix läuft in [Lauf 44545407442](https://github.com/oyoungsoo97-hub/frame-camera/actions/runs/44545407442) auf Commit `33bd45fa5b75a22fc314e80cb35f0dab238d9ef7`: zwei iOS- und drei Android-Konfigurationen sowie Logik-/Asset-Prüfung. Die ausgelieferten produktiven App-Dateien sind gegenüber diesem Commit unverändert; spätere Änderungen betreffen Dokumentation und Nachweispaketierung.
+
+Das [dauerhafte QA-Paket](https://github.com/oyoungsoo97-hub/frame-camera/releases/tag/qa-evidence-44545407442) enthält tatsächliche Jobmetadaten, Protokolle, Paketprüfungen, 30 native Demo-Screenshots und die Buildbeispiele aus diesem Lauf. Die Paketierung verlangt einen erfolgreichen Gesamtlauf, die ausgewählten nativen Jobs, sechs Android-Screenshots je Konfiguration sowie identische produktive Dateien. Die früheren Pakete 44538808448/r2 sind nach dem visuellen Fund als ersetzt markiert; ihre grünen Funktionstests werden nicht als visuelle Freigabe des alten Builds ausgegeben.
 
 Die **12 iOS-Tests** prüfen Start und lokale Assets, Dateisystem-/Share-Bridge, drei Sprachen/Layout, echtes MediaPipe-Modell mit cm/m-Kalibrierung, Aufnahme/Galerie/Neuladen/Löschen und Speicherfehler bei manuellen wie automatischen Aufnahmen. Je ein Test erzeugt sechs native Screenshots. Die **24 Android-Tests** prüfen zusätzlich emulierte Kameraframes, kein Audio und Kamerastopp beim App-Wechsel. Die Systemberechtigung ist in Android vorab erteilt; echte Berechtigungsdialoge sind damit nicht abgenommen.
 
@@ -32,6 +31,7 @@ Die Screenshot-Dateien entstehen aus echten nativen App-Fenstern mit dem generie
 
 ## Gefundene und behobene Fehler
 
+- **Android 12 / WebView 91:** Die tatsächlichen Screenshots zeigten trotz grüner Funktionstests eine leere Vollbild-Fotoansicht. Eine CSS-Breite mit `var()` und nicht unterstütztem `dvh` wurde erst bei der Berechnung ungültig und überschattete den `vh`-Fallback. Die moderne Regel liegt jetzt hinter `@supports (height:100dvh)`. Layout- und Screenshot-Tests verlangen zusätzlich eine sichtbare Foto-/Bildfläche; Screenshots warten auf abgeschlossene Analyse.
 - **Safari/iOS 15:** Ein regulärer Ausdruck mit Lookbehind verhinderte das Parsen der Übersetzungsdatei. Durch kompatiblen Ausdruck ersetzt und mit Regressionstest abgesichert.
 - **Galerie:** Eine späte initiale Datenbankantwort konnte das erste neu aufgenommene Foto aus dem sichtbaren Zustand verdrängen. Aufnahme wartet jetzt auf den abgeschlossenen initialen Ladevorgang; Timeout-/Fehlerpfade sind begrenzt.
 - **Speicher voll:** Nicht dauerhaft gespeicherte Fotos bleiben exportierbar und erhalten im Vorschaudialog eine übersetzte Warnung. Transaktionsabschluss wird abgewartet. Bei Speicherfehlern pausiert die App automatische Aufnahmen und öffnet sofort die erste ungespeicherte, exportierbare Vorschau. Der erweiterte Test besteht auf beiden iOS- und allen drei Android-Konfigurationen.
@@ -46,7 +46,7 @@ Der Vollpixel-Lauf mit 1812×2176 bei 420 dpi blieb anschließend hängen. Ein g
 
 Die Screenshot-Übernahme wurde zusätzlich abgesichert: Gradle hatte die Test-App nach erfolgreichem Test deinstalliert und damit ihre Bilder entfernt. Der CI-Aufruf erhält die App bis zur Übernahme und verlangt anschließend sechs nichtleere PNGs. Diese Einstellung betrifft ausschließlich den vergänglichen CI-Emulator ([AndroidX-Referenz](https://android.googlesource.com/platform/frameworks/support/+/eb74b1a4b3527414639994574a201f125aff90f5)).
 
-Der [native Buildlauf 44542772436](https://github.com/oyoungsoo97-hub/frame-camera/actions/runs/44542772436) erstellt zusätzlich ein Debug-APK und eine iOS-Simulator-App aus denselben produktiven App-Dateien. Diese Pakete dienen Tests und sind keine Store-Uploads.
+Derselbe vollständige Lauf erstellt zusätzlich ein Debug-APK und eine iOS-Simulator-App aus den getesteten produktiven App-Dateien. Diese Pakete dienen Tests und sind keine Store-Uploads.
 
 ## Nicht durch diese Tests bewiesen
 

@@ -1,4 +1,8 @@
-# 2.1.0 — preparation, not a store release
+# Changelog
+
+## 2.1.0 — preparation, not a store release
+
+- Fixed a visually confirmed collapsed full-screen photo frame on Android 12 / WebView 91: guard dynamic viewport units behind CSS feature detection. Native layout and screenshot tests now require a visible photo frame and decoded image, and screenshot capture waits for analysis to finish.
 
 - Replaced regex lookbehind that prevented translations from parsing on Safari/iOS 15.
 - Set iOS minimum to 15.4 and Android WebView minimum to 90; added old-WebView update screen and viewport-height fallbacks.
@@ -7,8 +11,6 @@
 - Fixed first-photo gallery initialization racing with capture; added explicit export warning and paused automatic capture when a photo cannot be persisted.
 - Prepared paid-download metadata (€2.99), signing configuration, release audits and explicit device/account release gates.
 - Added native integration suites, generated-demo screenshots and a report distinguishing simulator/emulator checks from missing hardware acceptance.
-
-# Changelog
 
 ## 2.0.0 — 2026-11-19
 
@@ -33,5 +35,3 @@
 - Camera startup fixes validated by the user in iPhone Safari.
 - English royal-blue/white/black interface.
 - Visible movement arrows and calibrated cm/m estimates.
-
-- Fixed a visually confirmed collapsed full-screen photo frame on Android 12 / WebView 91: guard dynamic viewport units behind CSS feature detection. Native layout and screenshot tests now require a visible photo frame and decoded image, and screenshot capture waits for analysis to finish.
