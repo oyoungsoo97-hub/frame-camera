@@ -73,4 +73,4 @@ Build success is not a hardware test. Real iPhone/Android camera, performance, b
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
 - [Third-party notices](THIRD_PARTY_NOTICES.md)
 
-Version 2.0.0 beta. The demo photo is AI-generated. Project code has no additional open-source license grant; bundled third-party materials retain their licenses.
+Version 2.1.0, store preparation / beta. The demo photo is AI-generated. Project code has no additional open-source license grant; bundled third-party materials retain their licenses.

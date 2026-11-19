@@ -1,0 +1,35 @@
+name: Preserve native QA evidence
+on:
+  push:
+    branches: [qa-evidence]
+permissions:
+  contents: write
+  actions: read
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    env:
+      QA_RUN: '44533261380'
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Retrieve completed run evidence
+        run: |
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$QA_RUN" > qa-run.json
+          python3 -c 'import json; r=json.load(open("qa-run.json")); assert r["status"]=="completed", "QA run is still running"'
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$QA_RUN/jobs?per_page=100" > qa-jobs.json
+          gh run download "$QA_RUN" --dir evidence
+      - name: Package reports, native screenshots and unsigned build samples
+        run: |
+          mkdir -p release-evidence
+          python3 scripts/ci/package-evidence.py
+          cp evidence/FRAME-unsigned-device-archive/FRAME-unsigned.xcarchive.zip release-evidence/FRAME-2.1.0-unsigned.xcarchive.zip
+          cp evidence/Android-QA-36-phone/android/app/build/outputs/bundle/release/app-release.aab release-evidence/FRAME-2.1.0-unsigned.aab
+          cd release-evidence
+          sha256sum * > SHA256SUMS.txt
+      - name: Preserve evidence as a clearly marked prerelease
+        run: |
+          cat > notes.txt <<'NOTES'
+          Native QA evidence for FRAME 2.1.0, run 44533261380. This is a test-evidence package, not a store release or compatibility certification. Read qa-jobs.json for actual passed/failed jobs. Physical-device tests and production signing are still pending. The AAB and iOS device archive are unsigned; neither is an installable store release. All screenshots use the generated demo image, not a user's camera photos.
+          NOTES
+          gh release create "qa-evidence-$QA_RUN" release-evidence/* --target "$GITHUB_SHA" --prerelease --latest=false --title "FRAME 2.1.0 · QA evidence $QA_RUN" --notes-file notes.txt

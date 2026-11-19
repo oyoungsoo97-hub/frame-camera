@@ -2,7 +2,7 @@
 
 ## Automated suite
 
-Run `npm test` (Node built-in test runner; no extra test framework). The current suite has 61 checks:
+Run `npm test` (Node built-in test runner; no extra test framework). The current suite has 69 checks:
 
 - Camera permission is requested immediately; timeout, denial, cancel and late-stream cleanup.
 - Video visibility/mute/inline ordering and bounded playback startup.
@@ -12,6 +12,8 @@ Run `npm test` (Node built-in test runner; no extra test framework). The current
 - Background contrast, brightness and possible horizontal-edge behavior.
 - Sharpness, frame change, eye uncertainty, burst ranking and fresh auto-capture gates.
 - Locale preference/fallback, complete catalog entries, metric directions/amounts, composed guidance and native permission resources.
+- Safari 15-compatible translation parsing.
+- Initial gallery load ordering, blocked/late database opening, timeouts, committed writes and storage quota/abort failures.
 
 `npm run check` verifies HTML asset references, required models/runtime files, pinned native runtimes and bundled native asset configuration. `npm run build` reproduces the native bridge.
 

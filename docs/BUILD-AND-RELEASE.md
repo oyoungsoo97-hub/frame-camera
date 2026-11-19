@@ -2,7 +2,7 @@
 
 ## Reproducible inputs
 
-Use Node 22+ and the committed `package-lock.json`. Capacitor Core/CLI/iOS/Android are pinned to 8.6.2, Filesystem to 8.1.5 and Share to 8.0.3. Do not update only one core platform package. MediaPipe 0.10.21 and both model files are vendored under `dist/vendor/`.
+Use Node 22+ and the committed `package-lock.json`. Capacitor Core/CLI/iOS/Android are pinned to 8.6.2, App to 8.1.2, Filesystem to 8.1.5 and Share to 8.0.3. Do not update only one core platform package. MediaPipe 0.10.21 and both model files are vendored under `dist/vendor/`.
 
 ```sh
 npm ci
@@ -82,12 +82,13 @@ chmod +x gradlew
 
 Output: `app/build/outputs/apk/debug/app-debug.apk`. The CI artifact `FRAME-Android-debug` contains this test APK after a successful job. Debug certificates on ephemeral CI runners may change; builds signed with a different certificate cannot update an existing installation in place. Export important photos before any reinstall.
 
-For a store build, configure a persistent release keystore outside version control, add signing configuration via local/CI secret values and run `./gradlew bundleRelease`. This produces an Android App Bundle, not an iOS file. Complete the Play Console listing and Data safety declarations before publishing. Store submission is outside the current implementation.
+The project has environment-only release signing configuration. Keep the persistent upload keystore outside version control; provide `FRAME_KEYSTORE`, `FRAME_KEYSTORE_PASSWORD`, `FRAME_KEY_ALIAS` and `FRAME_KEY_PASSWORD` through a secure local environment or separately authorized CI secrets. Run `./gradlew :app:bundleRelease -PframeRequireSigning=true` to require all signing values. A normal CI bundle is intentionally unsigned. See [account and submission steps](../store/ACCOUNT-AND-SUBMISSION.md) before creating or signing a production package. Store metadata, privacy drafts and a device acceptance plan are prepared in `store/`; actual portal submission is pending.
 
 The Android manifest requests CAMERA and INTERNET, marks camera hardware optional for demo/import use and disables automatic app backup. There is no microphone permission. INTERNET allows app/model infrastructure and WebView operation; camera images are not sent to a backend.
 
 ## GitHub Actions
 
+- `store-checks.yml`: native iPhone/iPad tests, Android API 31/36 phone/fold-size tests, release bundle/archive audits, lint and native screenshot evidence. These are simulator/emulator results, not physical-device certification.
 - `pages.yml`: static web build/test/deploy with `contents: read`, `pages: write`, `id-token: write`.
 - `native.yml`: Linux Android debug build and macOS 26 iOS simulator build, with read-only repository access. Version tags also trigger a release job with repository write permission to publish those build outputs, the HTML/source ZIPs and checksums as a GitHub prerelease. No signing secrets are needed.
 - Workflow artifacts are retained for 30 days. Tagged release attachments persist until explicitly removed. Download the v2.0.0 beta from [Releases](https://github.com/oyoungsoo97-hub/frame-camera/releases/tag/v2.0.0). A failed build does not publish a release.

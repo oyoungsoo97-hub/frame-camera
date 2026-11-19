@@ -79,4 +79,4 @@ npm run android
 
 [구조와 계산](docs/ARCHITECTURE.md) · [빌드와 서명](docs/BUILD-AND-RELEASE.md) · [개인정보](docs/PRIVACY.md) · [번역](docs/LOCALIZATION.md) · [테스트](docs/TESTING.md) · [문제 해결](docs/TROUBLESHOOTING.md) · [외부 구성요소](THIRD_PARTY_NOTICES.md)
 
-버전 2.0.0 베타. 예시 사진은 AI 생성 이미지입니다. 프로젝트 코드는 공개만으로 추가 오픈소스 이용허락이 부여되지 않으며, 외부 라이브러리와 모델에는 각각의 라이선스가 적용됩니다.
+버전 2.1.0, 스토어 출시 준비 / 베타. 예시 사진은 AI 생성 이미지입니다. 프로젝트 코드는 공개만으로 추가 오픈소스 이용허락이 부여되지 않으며, 외부 라이브러리와 모델에는 각각의 라이선스가 적용됩니다.

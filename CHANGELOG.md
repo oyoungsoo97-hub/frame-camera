@@ -4,6 +4,7 @@
 - Set iOS minimum to 15.4 and Android WebView minimum to 90; added old-WebView update screen and viewport-height fallbacks.
 - Added native background camera shutdown and Android back handling; iOS permission alerts do not trigger native background shutdown.
 - Added three-language public privacy/support pages accessible in mobile Options.
+- Fixed first-photo gallery initialization racing with capture; added explicit export warning when a photo cannot be persisted.
 - Prepared paid-download metadata (€2.99), signing configuration, release audits and explicit device/account release gates.
 - Added native integration suites, generated-demo screenshots and a report distinguishing simulator/emulator checks from missing hardware acceptance.
 
