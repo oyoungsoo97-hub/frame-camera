@@ -34,8 +34,8 @@ jobs:
           python3 scripts/ci/verify-evidence-jobs.py
           gh run download "$QA_RUN" --pattern 'iOS-QA-iPhone' --pattern 'FRAME-unsigned-device-archive' --pattern 'FRAME-iOS-Simulator' --dir evidence
           gh run download "$ANDROID_QA_RUN" --pattern 'Android-QA-*' --dir evidence
-          gh run download "$IPAD_QA_RUN" --pattern 'iOS-QA-iPad' --dir evidence
-          gh run download "$QA_RUN" --pattern 'iOS-QA-iPad' --dir superseded-downloads
+          gh run download "$IPAD_QA_RUN" --name 'iOS-QA-iPad' --dir evidence/iOS-QA-iPad
+          gh run download "$QA_RUN" --name 'iOS-QA-iPad' --dir superseded-downloads/iOS-QA-iPad
           mkdir -p evidence/superseded-ipad
           cp superseded-downloads/iOS-QA-iPad/xcode-tests.log evidence/superseded-ipad/xcode-tests.log
       - name: Package reports, native screenshots and unsigned build samples
