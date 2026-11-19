@@ -5,6 +5,8 @@ window.__frameQARun = async function(name, platform) {
   const wait = async (predicate, message, timeout=60000) => {
     const start=Date.now();
     while(Date.now()-start<timeout) { if(await predicate())return; await new Promise(r=>setTimeout(r,150)); }
+    // A synchronous shader/model task may finish while the final timer callback is delayed.
+    if(await predicate()) { console.info('FRAME_QA predicate resolved after delayed timer',message,Date.now()-start);return; }
     throw Error(message+'; engine='+$('#engineLabel')?.textContent+'; status='+$('#statusMessage')?.textContent);
   };
   const visibleFinder = () => {

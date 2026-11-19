@@ -1,7 +1,7 @@
 name: Store readiness tests
 on:
   push:
-    branches: [store-readiness, android-qa]
+    branches: [store-readiness, android-qa, ios-qa]
   workflow_dispatch:
 permissions:
   contents: read
@@ -21,6 +21,7 @@ jobs:
       - run: npm run build && npm test && npm run check && node scripts/store-preflight.mjs
       - run: npm audit --omit=dev --audit-level=high
   android:
+    if: github.ref_name != 'ios-qa'
     runs-on: ubuntu-latest
     timeout-minutes: 35
     strategy:
@@ -107,7 +108,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        family: [iPhone, iPad]
+        family: ${{ fromJSON(github.ref_name == 'ios-qa' && '["iPad"]' || '["iPhone","iPad"]') }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
