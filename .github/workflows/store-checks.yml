@@ -37,8 +37,9 @@ jobs:
             density: 420
           - api: 36
             shape: fold
-            size: 1812x2176
-            density: 420
+            # Same 690x829 dp layout; fewer software-rendered pixels in CI.
+            size: 906x1088
+            density: 210
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

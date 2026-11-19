@@ -8,7 +8,7 @@ FRAME_LOGGER_PID=$!
 trap 'kill "$FRAME_LOGGER_PID" 2>/dev/null || true' EXIT
 (
   cd android
-  ./gradlew :app:connectedDebugAndroidTest --no-daemon
+  timeout 12m ./gradlew :app:connectedDebugAndroidTest --no-daemon
 )
 FRAME_TEST_EXIT=$?
 timeout 10s adb pull /sdcard/Android/data/io.github.oyoungsoo97hub.framecamera/files/. build/qa/native-screenshots/ || true
