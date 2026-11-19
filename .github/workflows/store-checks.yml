@@ -72,7 +72,7 @@ jobs:
           arch: x86_64
           profile: pixel_2
           disable-animations: true
-          emulator-options: -no-window -gpu swiftshader -feature -Vulkan -no-snapshot -noaudio -no-boot-anim -camera-back emulated -camera-front emulated
+          emulator-options: -no-window -gpu software -no-snapshot -noaudio -no-boot-anim -camera-back emulated -camera-front emulated
           script: |
             adb shell wm size ${{ matrix.size }}
             adb shell wm density ${{ matrix.density }}
@@ -83,6 +83,10 @@ jobs:
         run: |
           mkdir -p build/qa
           cp android-webview.txt build/qa/ 2>/dev/null || true
+          free -m
+          sudo dmesg | tail -n 80 > build/qa/host-kernel-tail.txt
+          tail -n 60 build/qa/android-logcat.txt || true
+          cat build/qa/host-kernel-tail.txt
       - uses: actions/upload-artifact@v4
         if: always()
         with:
