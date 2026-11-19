@@ -1,3 +1,4 @@
+import {loadPhotoDatabase} from './gallery-storage.js?v=8';
 import {initLocalization,translateText,getLocale,getLanguage} from './i18n.js?v=8';
 import {isNative,shareNativePhoto,bindNativeLifecycle} from './native-bridge.js?v=8';
 import {styles,poses,cropRect,projectLandmarks,analyzePose,smoothLandmarks,clamp,posePacks} from './coach.js?v=8';
@@ -240,6 +241,8 @@ function frameCanvas(maxEdge=2048){
 async function capture(useTimer=true){
   if(state.busy||state.view!=='studio')return;state.busy=true;const epoch=state.epoch;$('#shutter').disabled=true;
   try{
+    await storageReady;
+    if(epoch!==state.epoch||document.hidden)return;
     if(useTimer&&state.timer){for(let i=state.timer;i>0;i--){if(epoch!==state.epoch||document.hidden)return;$('#countdown').hidden=false;$('#countdown').textContent=i;await new Promise(r=>setTimeout(r,1000));}}$('#countdown').hidden=true;
     const count=state.mode==='camera'&&state.bestShot?3:1,frames=[],burstId=count>1?(crypto.randomUUID?.()??Date.now().toString()):null;let previous=null;
     for(let i=0;i<count;i++){
@@ -259,7 +262,9 @@ async function capture(useTimer=true){
   }catch(e){console.error('Capture failed',e);toast('Could not capture the photo. Please try again.');}finally{state.busy=false;$('#shutter').disabled=false;$('#countdown').hidden=true;$('#burstStatus').hidden=true;state.readySince=0;}
 }
 async function openDatabase(){
-  try{state.db=await new Promise((resolve,reject)=>{const r=indexedDB.open('frame-camera',1);r.onupgradeneeded=()=>r.result.createObjectStore('photos',{keyPath:'id'});r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});state.photos=await new Promise((resolve,reject)=>{const r=state.db.transaction('photos').objectStore('photos').getAll();r.onsuccess=()=>resolve(r.result.sort((a,b)=>b.created-a.created));r.onerror=()=>reject(r.error);});}catch{state.db=null;setStatus('This browser cannot keep your photos between visits. Download them after shooting.');}updateCount();
+  try{const loaded=await loadPhotoDatabase(globalThis.indexedDB);state.db=loaded.db;state.photos=loaded.photos;}
+  catch{state.db=null;setStatus('This browser cannot keep your photos between visits. Download them after shooting.');}
+  updateCount();
 }
 async function persistPhoto(photo){if(!state.db)return;try{await new Promise((resolve,reject)=>{const tx=state.db.transaction('photos','readwrite');tx.objectStore('photos').put(photo);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);});}catch{toast('Browser storage is full. Download your photo to keep it.');}}
 function updateCount(){$('#galleryCount').textContent=state.photos.length;$('#frameNumber').textContent='FRAME '+String(state.photos.length+1).padStart(3,'0');}
@@ -363,7 +368,7 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden)suspendCame
 bindNativeLifecycle({onInactive:suspendCamera,onBack:()=>{const dialog=document.querySelector('dialog[open]');if(dialog){dialog.close();return true;}if(state.focus){setFocus(false);return true;}if(state.view!=='studio'){showView('studio');return true;}suspendCamera();return false;}}).catch(error=>console.error('Native lifecycle unavailable',error));
 new ResizeObserver(()=>{clearTimeout(state.resizeTimeout);state.resizeTimeout=setTimeout(updateAnalysis,100);}).observe(finder);
 try{const prefs=JSON.parse(localStorage.getItem('frame-settings')??'null');if(prefs){if(styles[prefs.style])state.style=prefs.style;if(posePacks.some(p=>p.id===prefs.pack)||prefs.pack==='all')state.pack=prefs.pack;if(poses.some(p=>p.id===prefs.pose))state.pose=prefs.pose;if(typeof prefs.grid==='boolean')state.grid=prefs.grid;if(typeof prefs.guide==='boolean')state.guide=prefs.guide;}}catch{}
-renderPoses();selectStyle(state.style);$('#grid').hidden=!state.grid;$('#gridBtn').classList.toggle('selected',state.grid);$('#gridBtn').setAttribute('aria-pressed',state.grid);$('#guideBtn').setAttribute('aria-pressed',state.guide);drawGuide();renderScene();renderQuality();openDatabase();setSource('demo');setEngine('Ready when you are');renderResult({detected:false,ready:false,score:null,kind:'find',instruction:'Start with your camera.',detail:'Start your camera for live guidance, or try the demo to see how it works.',metrics:[]});
+renderPoses();selectStyle(state.style);$('#grid').hidden=!state.grid;$('#gridBtn').classList.toggle('selected',state.grid);$('#gridBtn').setAttribute('aria-pressed',state.grid);$('#guideBtn').setAttribute('aria-pressed',state.guide);drawGuide();renderScene();renderQuality();const storageReady=openDatabase();setSource('demo');setEngine('Ready when you are');renderResult({detected:false,ready:false,score:null,kind:'find',instruction:'Start with your camera.',detail:'Start your camera for live guidance, or try the demo to see how it works.',metrics:[]});
 initLocalization();
 window.addEventListener('frame-languagechange',()=>{state.lastSpoken='';if('speechSynthesis'in window)speechSynthesis.cancel();});
 if(!isNative&&'serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js?v=8',{updateViaCache:'none'}).catch(()=>{});

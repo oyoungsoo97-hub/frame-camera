@@ -47,7 +47,7 @@ window.__frameQARun = async function(name, platform) {
     const before=Number($('#galleryCount').textContent);click('#shutter');
     await wait(()=>$('#photoDialog').open,'Capture did not open photo');
     await wait(()=>$('#capturedPreview').naturalWidth>0,'Captured image failed to decode');
-    assert(Number($('#galleryCount').textContent)===before+1,'Gallery count did not increase');
+    assert(Number($('#galleryCount').textContent)===before+1,'Gallery count did not increase: before='+before+', after='+$('#galleryCount').textContent);
     $('#photoDialog').close();localStorage.setItem('frame-qa-capture-count',String(before+1));
     return {count:before+1,width:$('#capturedPreview').naturalWidth};
   }
