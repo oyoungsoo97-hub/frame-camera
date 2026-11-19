@@ -1,6 +1,6 @@
 {
   "name": "frame-camera",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": true,
   "type": "module",
   "description": "On-device camera coach for Web, iOS and Android \u2014 Deutsch, English, \ud55c\uad6d\uc5b4",
@@ -15,10 +15,11 @@
     "build": "node scripts/build-native-bridge.mjs"
   },
   "dependencies": {
-    "@capacitor/core": "8.6.2",
     "@capacitor/android": "8.6.2",
-    "@capacitor/ios": "8.6.2",
+    "@capacitor/app": "8.1.2",
+    "@capacitor/core": "8.6.2",
     "@capacitor/filesystem": "8.1.5",
+    "@capacitor/ios": "8.6.2",
     "@capacitor/share": "8.0.3"
   },
   "devDependencies": {

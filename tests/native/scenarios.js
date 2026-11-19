@@ -62,7 +62,7 @@ window.__frameQARun = async function(name, platform) {
     return 'IndexedDB persistence across reload and deletion';
   }
   if(name==='layout') {
-    click('#focusBtn');
+    click('[data-view="studio"]');click('#focusBtn');
     const r=$('#shutter').getBoundingClientRect();
     assert(r.width>=44&&r.height>=44,'Shutter touch target too small');
     assert(r.top>=0&&r.bottom<=innerHeight+1,'Shutter outside viewport');
@@ -83,6 +83,15 @@ window.__frameQARun = async function(name, platform) {
     await call('Filesystem','deleteFile',{directory:'CACHE',path});
     const canShare=await call('Share','canShare',{});assert(canShare.value===true,'Native share plugin unavailable');
     return 'Real native cache write/read/delete and share capability';
+  }
+  if(name==='cameraStart') {
+    click('#cameraBtn');await wait(()=>$('#video').srcObject&&$('#video').videoWidth>0,'Emulator camera did not produce frames',30000);
+    window.__qaTracks=$('#video').srcObject.getTracks();return 'Camera running';
+  }
+  if(name==='cameraStopped') {
+    assert(window.__qaTracks?.length>0,'Camera setup missing');
+    assert(window.__qaTracks.every(t=>t.readyState==='ended'),'Background camera tracks still active');
+    assert(!$('#video').srcObject,'Camera stream still attached');return 'Camera released on native background';
   }
   if(name==='camera') {
     click('#cameraBtn');

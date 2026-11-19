@@ -1,4 +1,4 @@
-import {analyzePose,styles} from './coach.js?v=7';
+import {analyzePose,styles} from './coach.js?v=8';
 
 // A user-supplied scale, not a depth sensor. Units follow a pinhole approximation
 // with an upright subject, unchanged camera intrinsics and a near-level phone.

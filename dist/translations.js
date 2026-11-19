@@ -1359,5 +1359,13 @@ export const messages = {
   "Find your best angle. Live framing and pose guidance, right in your camera. All on your device.": {
     "de": "Finde deinen besten Winkel. Live-Hilfe für Bildausschnitt und Pose, direkt in deiner Kamera. Alles auf deinem Gerät.",
     "ko": "나만의 베스트 앵글을 찾아보세요. 카메라에서 실시간으로 구도와 포즈를 안내하며 모두 기기에서 처리합니다."
+  },
+  "Privacy policy": {
+    "de": "Datenschutzerklärung",
+    "ko": "개인정보 처리방침"
+  },
+  "Help & support": {
+    "de": "Hilfe & Support",
+    "ko": "도움말 및 지원"
   }
 };

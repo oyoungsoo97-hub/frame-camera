@@ -1,9 +1,9 @@
-import {initLocalization,translateText,getLocale,getLanguage} from './i18n.js?v=7';
-import {isNative,shareNativePhoto} from './native-bridge.js?v=7';
-import {styles,poses,cropRect,projectLandmarks,analyzePose,smoothLandmarks,clamp,posePacks} from './coach.js?v=7';
-import {requestCamera,playCamera} from './camera-session.js?v=7';
-import {createCalibration,sameCamera,estimateMetricGuide,metricPresentation,formatDistance} from './metric-guide.js?v=7';
-import {qualityStats,eyeState,chooseBest,canAutoShoot,analyzeScene} from './photo-analysis.js?v=7';
+import {initLocalization,translateText,getLocale,getLanguage} from './i18n.js?v=8';
+import {isNative,shareNativePhoto,bindNativeLifecycle} from './native-bridge.js?v=8';
+import {styles,poses,cropRect,projectLandmarks,analyzePose,smoothLandmarks,clamp,posePacks} from './coach.js?v=8';
+import {requestCamera,playCamera} from './camera-session.js?v=8';
+import {createCalibration,sameCamera,estimateMetricGuide,metricPresentation,formatDistance} from './metric-guide.js?v=8';
+import {qualityStats,eyeState,chooseBest,canAutoShoot,analyzeScene} from './photo-analysis.js?v=8';
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const state={view:'studio',mode:'demo',style:'travel',pose:'relax',mirror:false,facing:'environment',grid:true,guide:true,voice:false,auto:false,timer:0,ratio:3/4,raw:null,result:null,stream:null,model:null,modelPromise:null,modelMode:'IMAGE',lastVideoTime:-1,lastInference:0,lastSpoken:'',lastSpeechAt:0,readySince:0,autoLatched:false,busy:false,epoch:0,photo:null,photos:[],db:null,objectUrls:[],imageUrl:null,previewUrl:null,loop:0,missingSince:0,cameraStarting:false,cameraAbort:null};
 state.calibration=null;state.metricLostAt=0;
@@ -358,10 +358,12 @@ $('#voiceBtn').onclick=()=>{if(!('speechSynthesis'in window)){toast('Voice guida
 $('#autoBtn').onclick=()=>{state.auto=!state.auto;state.readySince=0;state.autoLatched=false;$('#autoBtn').setAttribute('aria-checked',state.auto);toast(state.auto?(state.mode==='camera'?'Hold the guide for 2 seconds to capture a photo.':'Auto capture will start when your camera is on.'):'Auto capture off.');};
 $('#helpBtn').onclick=$('#helpNav').onclick=()=>$('#helpDialog').showModal();$('#privacyBtn').onclick=()=>$('#privacyDialog').showModal();$$('.close-dialog').forEach(b=>b.onclick=()=>b.closest('dialog').close());$$('dialog').forEach(d=>{d.addEventListener('click',e=>{if(e.target===d){const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close();}});});
 $('#downloadPhotoBtn').onclick=downloadPhoto;$('#sharePhotoBtn').onclick=sharePhoto;$('#deletePhotoBtn').onclick=deletePhoto;
-document.addEventListener('visibilitychange',()=>{if(document.hidden){if(state.mode==='camera')stopCamera();if('speechSynthesis'in window)speechSynthesis.cancel();}});window.addEventListener('pagehide',()=>{if(state.stream)state.stream.getTracks().forEach(t=>t.stop());});
+function suspendCamera(){if(state.mode==='camera'||state.cameraStarting)stopCamera();if('speechSynthesis'in window)speechSynthesis.cancel();}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)suspendCamera();});window.addEventListener('pagehide',suspendCamera);
+bindNativeLifecycle({onInactive:suspendCamera,onBack:()=>{const dialog=document.querySelector('dialog[open]');if(dialog){dialog.close();return true;}if(state.focus){setFocus(false);return true;}if(state.view!=='studio'){showView('studio');return true;}suspendCamera();return false;}}).catch(error=>console.error('Native lifecycle unavailable',error));
 new ResizeObserver(()=>{clearTimeout(state.resizeTimeout);state.resizeTimeout=setTimeout(updateAnalysis,100);}).observe(finder);
 try{const prefs=JSON.parse(localStorage.getItem('frame-settings')??'null');if(prefs){if(styles[prefs.style])state.style=prefs.style;if(posePacks.some(p=>p.id===prefs.pack)||prefs.pack==='all')state.pack=prefs.pack;if(poses.some(p=>p.id===prefs.pose))state.pose=prefs.pose;if(typeof prefs.grid==='boolean')state.grid=prefs.grid;if(typeof prefs.guide==='boolean')state.guide=prefs.guide;}}catch{}
 renderPoses();selectStyle(state.style);$('#grid').hidden=!state.grid;$('#gridBtn').classList.toggle('selected',state.grid);$('#gridBtn').setAttribute('aria-pressed',state.grid);$('#guideBtn').setAttribute('aria-pressed',state.guide);drawGuide();renderScene();renderQuality();openDatabase();setSource('demo');setEngine('Ready when you are');renderResult({detected:false,ready:false,score:null,kind:'find',instruction:'Start with your camera.',detail:'Start your camera for live guidance, or try the demo to see how it works.',metrics:[]});
 initLocalization();
 window.addEventListener('frame-languagechange',()=>{state.lastSpoken='';if('speechSynthesis'in window)speechSynthesis.cancel();});
-if(!isNative&&'serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js?v=7',{updateViaCache:'none'}).catch(()=>{});
+if(!isNative&&'serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js?v=8',{updateViaCache:'none'}).catch(()=>{});

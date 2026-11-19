@@ -1,4 +1,4 @@
-import {messages} from './translations.js?v=7';
+import {messages} from './translations.js?v=8';
 export const supportedLanguages=['de','en','ko'];
 export function resolveLanguage(saved,languages=['en']) {
   if(supportedLanguages.includes(saved))return saved;
@@ -42,7 +42,7 @@ export function translateText(input,lang=language){
   else if((m=key.match(/^Could not start the camera\. Please try again\. \(([^)]+)\)$/)))value=pick(lang,`Kamerastart fehlgeschlagen. Versuche es erneut. (${m[1]})`,`카메라를 시작하지 못했어요. 다시 시도하세요. (${m[1]})`);
   else if(key.includes(' · '))value=key.split(' · ').map(x=>translateText(x,lang)).join(' · ');
   else if(sourceKeys.some(k=>key.startsWith(k+' '))){const prefix=sourceKeys.find(k=>key.startsWith(k+' '));value=translateText(prefix,lang)+' '+translateText(key.slice(prefix.length+1),lang);}
-  else if(/(?<=[.!?])\s+(?=[A-Z])/.test(key))value=key.split(/(?<=[.!?])\s+(?=[A-Z])/).map(x=>translateText(x,lang)).join(' ');
+  else if(/[.!?]\s+(?=[A-Z])/.test(key))value=key.replace(/([.!?])\s+(?=[A-Z])/g,'$1\u0000').split('\u0000').map(x=>translateText(x,lang)).join(' ');
   return value?leading+value+trailing:raw;
 }
 export function setLanguage(next){

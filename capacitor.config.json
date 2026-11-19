@@ -3,12 +3,14 @@
   "appName": "FRAME",
   "webDir": "dist",
   "server": {
-    "androidScheme": "https"
+    "androidScheme": "https",
+    "errorPath": "unsupported.html"
   },
   "ios": {
     "contentInset": "always"
   },
   "android": {
-    "backgroundColor": "#111217"
+    "backgroundColor": "#111217",
+    "minWebViewVersion": 90
   }
 }

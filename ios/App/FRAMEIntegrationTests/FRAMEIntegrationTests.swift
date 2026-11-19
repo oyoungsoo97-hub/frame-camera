@@ -23,7 +23,7 @@ final class FRAMEIntegrationTests: XCTestCase {
         }
         XCTAssertNotNil(web,"The real app's WKWebView did not start")
         let url=try XCTUnwrap(Bundle(for:Self.self).url(forResource:"scenarios",withExtension:"js"))
-        _ = try await web.evaluateJavaScript(String(contentsOf:url,encoding:.utf8))
+        _ = try await web.evaluateJavaScript(String(contentsOf:url,encoding:.utf8)+"; void 0;")
     }
     func run(_ name:String) async throws {
         let result=try await web.callAsyncJavaScript("return await window.__frameQARun(name, 'ios');",arguments:["name":name],in:nil,contentWorld:.page)

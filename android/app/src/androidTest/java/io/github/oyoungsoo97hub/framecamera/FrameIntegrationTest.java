@@ -9,7 +9,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 import org.junit.*;
 import org.junit.runner.RunWith;
-import java.nio.charset.StandardCharsets;
+import androidx.lifecycle.Lifecycle;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -57,6 +57,10 @@ public class FrameIntegrationTest {
     @Test public void gallerySurvivesReloadAndDeletes() throws Exception {
         run("capture");InstrumentationRegistry.getInstrumentation().runOnMainSync(()->web.reload());
         waitFor("document.querySelector('#cameraBtn')?.onclick != null",30000);js(scenarios);run("persistenceAndDelete");
+    }
+    @Test public void cameraStopsWhenAppEntersBackground() throws Exception {
+        run("cameraStart");scenario.moveToState(Lifecycle.State.CREATED);Thread.sleep(500);
+        scenario.moveToState(Lifecycle.State.RESUMED);run("cameraStopped");
     }
     @Test public void emulatedCameraStartsAndStops() throws Exception {run("camera");}
 }

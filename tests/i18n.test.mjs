@@ -39,3 +39,8 @@ test('native manifests declare camera and translated permission text without mic
  const android=readFileSync(new URL('../android/app/src/main/AndroidManifest.xml',import.meta.url),'utf8');assert.match(android,/android.permission.CAMERA/);assert.doesNotMatch(android,/RECORD_AUDIO/);assert.match(android,/allowBackup="false"/);
  for(const lang of ['de','en','ko'])assert.match(readFileSync(new URL(`../ios/App/App/${lang}.lproj/InfoPlist.strings`,import.meta.url),'utf8'),/NSCameraUsageDescription/);
 });
+test('sentence fallback translates without iOS-incompatible lookbehind expressions',()=>{
+ assert.equal(translateText('Unknown opening. Start camera','de'),'Unknown opening. Kamera starten');
+ const source=readFileSync(new URL('../dist/i18n.js',import.meta.url),'utf8');
+ assert.ok(!source.includes('(?<=')&&!source.includes('(?<!'),'iOS 15 cannot parse regexp lookbehind');
+});

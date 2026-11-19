@@ -1,0 +1,11 @@
+{
+  "name": "FRAME – Camera Coach",
+  "subtitle": "Live framing and pose guidance",
+  "short_description": "Find your framing, position and pose with guidance directly in your camera.",
+  "keywords": "camera,photo,pose,portrait,composition,travel,selftimer",
+  "promotional_text": "Find your framing, choose a pose and follow live guidance. One purchase, with no ads, in-app purchases or subscriptions.",
+  "description": "A small move can change a photo. FRAME helps you position one person with an outline, on-screen directions and pose suggestions.\n\nYOUR LIVE COACH\nSee who should move left, right, closer or farther away. Choose travel, café, full-body or seated poses.\n\nGUIDANCE IN CM AND M\nEnter the person's height and camera distance for estimated movement. This is calibrated image geometry, not a depth-sensor measurement. Posture, zoom and your inputs affect accuracy.\n\nMORE CHOICE WHEN YOU SHOOT\nBest of 3 saves three frames and highlights a suggestion using estimated eye state, sharpness and movement. Compare the images yourself and keep your favorite. A timer, grid and automatic capture help you frame the moment.\n\nPHOTOS ON YOUR DEVICE\nImage analysis runs locally. FRAME does not send camera frames to an AI service. Photos stay in your local gallery until you delete or export them. Save important photos separately.\n\nDEUTSCH, ENGLISH, 한국어\nChange language in Options. Spoken guidance depends on the voices installed on your device.\n\nOne-time purchase. No ads, in-app purchases or subscriptions. Designed for one person per shot. Detection and suggestions depend on lighting, visibility and device performance. FRAME does not rate beauty or identify people.",
+  "apple_category": "PHOTO_AND_VIDEO",
+  "google_category": "PHOTOGRAPHY",
+  "copyright": "2026 Youngsoo Oh"
+}

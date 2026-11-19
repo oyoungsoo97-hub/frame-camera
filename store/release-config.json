@@ -1,0 +1,16 @@
+{
+  "developer": "Youngsoo Oh",
+  "version": "2.1.0",
+  "bundle_id": "io.github.oyoungsoo97hub.framecamera",
+  "business_model": "paid_download",
+  "base_price_eur": 2.99,
+  "ads": false,
+  "in_app_purchases": false,
+  "subscriptions": false,
+  "support_url": "https://oyoungsoo97-hub.github.io/frame-camera/support.html",
+  "privacy_url": "https://oyoungsoo97-hub.github.io/frame-camera/privacy.html",
+  "support_email": null,
+  "release_status": "preparation_only",
+  "store_accounts_created": false,
+  "availability_regions": null
+}
