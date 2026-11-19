@@ -11,6 +11,7 @@ Version 2.1.0; review against the exact signed binary before submission. These a
 | Captured JPEG, date, pose/quality | Local IndexedDB gallery | Only on user-chosen export/share |
 | Language/settings | Local preferences | No |
 | Temporary share copy | Native cache, handed to OS share destination | User-initiated |
+| Optional spoken guidance | Guidance text passed to OS/browser speech service; no photo | Voice service may use the network; review under platform-service definitions |
 | Payment | Store purchase transaction | Processed by Apple/Google; FRAME has no billing integration |
 
 No account, ads, analytics, crash-upload service, location, microphone recording, advertising identifier, remote inference endpoint or third-party tracking is implemented. Bundled runtime: Capacitor Core/App/Filesystem/Share and MediaPipe models/WASM. Native apps load assets locally. Browser version is served by GitHub Pages; that host sees normal connection metadata. External GitHub support and selected share destinations have separate processing.
