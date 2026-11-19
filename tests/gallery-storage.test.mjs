@@ -29,3 +29,17 @@ test('a stalled initial read closes the database and rejects',async()=>{
 test('blocked database initialization fails explicitly instead of hanging the shutter',async()=>{
  const f=fakeDB(),pending=loadPhotoDatabase(f.api);f.request.onblocked();await assert.rejects(pending,/blocked/);
 });
+import {writePhoto} from '../dist/gallery-storage.js';
+test('an unavailable database reports that the photo is not persisted',async()=>{
+ assert.equal(await writePhoto(null,{id:'unsaved'}),false);
+});
+test('write is successful only after the storage transaction commits',async()=>{
+ const tx={objectStore:()=>({put:p=>assert.equal(p.id,'new')})};let done=false;
+ const pending=writePhoto({transaction:()=>tx},{id:'new'}).then(v=>{done=true;return v;});
+ await Promise.resolve();assert.equal(done,false);tx.oncomplete();assert.equal(await pending,true);
+});
+test('quota errors and aborted writes are surfaced, not reported as persisted',async()=>{
+ const quota=Object.assign(Error('full'),{name:'QuotaExceededError'});
+ await assert.rejects(writePhoto({transaction:()=>({objectStore:()=>({put:()=>{throw quota;}})})},{id:'unsaved'}),{name:'QuotaExceededError'});
+ const tx={objectStore:()=>({put:()=>{}})};const pending=writePhoto({transaction:()=>tx},{id:'unsaved'});tx.onabort();await assert.rejects(pending,/interrupted/);
+});

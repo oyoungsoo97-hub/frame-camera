@@ -1,4 +1,4 @@
-import {loadPhotoDatabase} from './gallery-storage.js?v=8';
+import {loadPhotoDatabase,writePhoto} from './gallery-storage.js?v=8';
 import {initLocalization,translateText,getLocale,getLanguage} from './i18n.js?v=8';
 import {isNative,shareNativePhoto,bindNativeLifecycle} from './native-bridge.js?v=8';
 import {styles,poses,cropRect,projectLandmarks,analyzePose,smoothLandmarks,clamp,posePacks} from './coach.js?v=8';
@@ -255,7 +255,7 @@ async function capture(useTimer=true){
     }
     if(epoch!==state.epoch||document.hidden)return;
     const winner=chooseBest(frames);frames.forEach((p,i)=>p.bestPick=count>1&&i===winner);
-    for(const photo of frames){state.photos.unshift(photo);await persistPhoto(photo);}updateCount();
+    for(const photo of frames){state.photos.unshift(photo);photo.persisted=await persistPhoto(photo);}updateCount();
     $('#flash').classList.remove('fire');void $('#flash').offsetWidth;$('#flash').classList.add('fire');
     toast(count>1?'Three frames saved. Best pick selected.':state.mode==='demo'?'Demo photo added to your gallery.':'Captured. Open your gallery to save or share it.');
     if(!state.auto)openPhoto(frames[winner]);
@@ -266,11 +266,11 @@ async function openDatabase(){
   catch{state.db=null;setStatus('This browser cannot keep your photos between visits. Download them after shooting.');}
   updateCount();
 }
-async function persistPhoto(photo){if(!state.db)return;try{await new Promise((resolve,reject)=>{const tx=state.db.transaction('photos','readwrite');tx.objectStore('photos').put(photo);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);});}catch{toast('Browser storage is full. Download your photo to keep it.');}}
+async function persistPhoto(photo){try{return await writePhoto(state.db,photo);}catch{return false;}}
 function updateCount(){$('#galleryCount').textContent=state.photos.length;$('#frameNumber').textContent='FRAME '+String(state.photos.length+1).padStart(3,'0');}
 function renderGallery(){state.objectUrls.forEach(URL.revokeObjectURL);state.objectUrls=[];$('#emptyGallery').hidden=state.photos.length>0;$('#galleryGrid').innerHTML='';state.photos.forEach((photo,i)=>{const url=URL.createObjectURL(photo.blob);state.objectUrls.push(url);const button=document.createElement('button');button.className='gallery-item';button.innerHTML=`<img src="${url}" alt="${photo.mode==='demo'?'Demo photo':'Captured photo'} ${i+1}" loading="lazy"><div class="gallery-item-info"><strong>${photo.bestPick?'★ Best · ':photo.mode==='demo'?'Demo · ':''}${styles[photo.style]?.name??'Gallery'}</strong><span>${new Date(photo.created).toLocaleDateString(getLocale(),{month:'2-digit',day:'2-digit'})}</span></div>`;button.onclick=()=>openPhoto(photo);$('#galleryGrid').append(button);});}
 function openPhoto(photo){
-  state.photo=photo;state.readySince=0;if(state.previewUrl)URL.revokeObjectURL(state.previewUrl);state.previewUrl=URL.createObjectURL(photo.blob);$('#capturedPreview').src=state.previewUrl;
+  state.photo=photo;$('#photoStorageWarning').hidden=photo.persisted!==false;state.readySince=0;if(state.previewUrl)URL.revokeObjectURL(state.previewUrl);state.previewUrl=URL.createObjectURL(photo.blob);$('#capturedPreview').src=state.previewUrl;
   $('#photoDialogTitle').textContent=photo.bestPick?'BEST PICK · 3-FRAME BURST':photo.mode==='demo'?'DEMO FRAME':'YOUR FRAME';
   $('#photoQuality').textContent=photo.quality?`${photo.quality.eyes==='open'?'Eyes appear open':photo.quality.eyes==='closed'?'Blink detected':'Eye check unavailable'} · Sharpness estimate ${Math.round(photo.quality.sharpness)}${photo.bestPick?' · Best of this burst':''}`:'';
   state.burstPreviewUrls.forEach(URL.revokeObjectURL);state.burstPreviewUrls=[];$('#burstFrames').innerHTML='';

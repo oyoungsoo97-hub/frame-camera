@@ -36,6 +36,10 @@ final class FRAMEIntegrationTests: XCTestCase {
         try await boot();try await run("capture");web.reload();
         try await Task.sleep(nanoseconds:500_000_000);try await boot();try await run("persistenceAndDelete")
     }
+    func testStorageFailureWarning() async throws {
+        try await boot();try await run("storageFailure");web.reload()
+        try await Task.sleep(nanoseconds:500_000_000);try await boot()
+    }
     func testStoreScreenshots() async throws {
         try await boot()
         let directory=FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0]

@@ -25,3 +25,15 @@ export function loadPhotoDatabase(indexedDB,timeoutMs=8000){
     }catch(error){finish(error);}
   });
 }
+export function writePhoto(db,photo){
+  if(!db)return Promise.resolve(false);
+  return new Promise((resolve,reject)=>{
+    try{
+      const tx=db.transaction('photos','readwrite');
+      tx.objectStore('photos').put(photo);
+      tx.oncomplete=()=>resolve(true);
+      tx.onerror=()=>reject(tx.error??Error('Photo storage failed'));
+      tx.onabort=()=>reject(tx.error??Error('Photo storage was interrupted'));
+    }catch(error){reject(error);}
+  });
+}

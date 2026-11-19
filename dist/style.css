@@ -30,3 +30,5 @@ body.shooting{overflow:hidden;background:#111217}.shooting .sidebar,.shooting .t
 html[lang=ko] body{word-break:keep-all}html[lang=de] .finder-tip strong{font-size:15px}
 
 .support-links{display:flex;flex-wrap:wrap;gap:14px;margin:20px 0 8px}.support-links a{color:#244eeb;text-decoration:underline;font-size:13px;min-height:44px;display:inline-flex;align-items:center}
+
+.storage-warning{border:1px solid #d99e37;border-radius:12px;background:#fff4d6;color:#3d2c09;padding:12px;font-weight:600;font-size:14px;line-height:1.5}

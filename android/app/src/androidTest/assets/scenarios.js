@@ -51,6 +51,18 @@ window.__frameQARun = async function(name, platform) {
     $('#photoDialog').close();localStorage.setItem('frame-qa-capture-count',String(before+1));
     return {count:before+1,width:$('#capturedPreview').naturalWidth};
   }
+  if(name==='storageFailure') {
+    click('[data-view="studio"]');await wait(()=>$('#sampleImage').complete&&$('#sampleImage').naturalWidth>0,'Demo missing');
+    const put=IDBObjectStore.prototype.put;
+    IDBObjectStore.prototype.put=function(){throw new DOMException('Injected test quota failure','QuotaExceededError');};
+    try {
+      click('#shutter');await wait(()=>$('#photoDialog').open,'Failed-storage photo preview missing');
+      await wait(()=>$('#capturedPreview').naturalWidth>0,'Unsaved photo cannot be exported');
+      assert(!$('#photoStorageWarning').hidden,'Storage failure warning is hidden');
+      assert($('#photoStorageWarning').textContent.includes('this session'),'Missing session-only notice');
+    }finally{IDBObjectStore.prototype.put=put;$('#photoDialog').close();}
+    return 'Injected storage failure retains an exportable photo and shows an explicit warning';
+  }
   if(name==='persistenceAndDelete') {
     const expected=Number(localStorage.getItem('frame-qa-capture-count'));
     assert(expected>0,'Capture setup missing');

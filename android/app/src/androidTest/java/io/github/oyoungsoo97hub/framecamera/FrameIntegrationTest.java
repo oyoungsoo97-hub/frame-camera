@@ -63,6 +63,7 @@ public class FrameIntegrationTest {
         scenario.moveToState(Lifecycle.State.RESUMED);run("cameraStopped");
     }
     @Test public void emulatedCameraStartsAndStops() throws Exception {run("camera");}
+    @Test public void storageFailureKeepsExportablePhotoWithWarning() throws Exception {run("storageFailure");}
     @Test public void storeScreenshots() throws Exception {
         for(String language:new String[]{"de","en","ko"})for(String view:new String[]{"guide","poses"}){
             run("screenshot_"+language+"_"+view);
