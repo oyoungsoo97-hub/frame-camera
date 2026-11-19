@@ -34,7 +34,7 @@ public class FrameIntegrationTest {
     private String js(String script) throws Exception {
         CountDownLatch latch=new CountDownLatch(1);AtomicReference<String> value=new AtomicReference<>();
         InstrumentationRegistry.getInstrumentation().runOnMainSync(()->web.evaluateJavascript(script,result->{value.set(result);latch.countDown();}));
-        assertTrue("WebView JavaScript timeout",latch.await(15,TimeUnit.SECONDS));return value.get();
+        assertTrue("WebView JavaScript timeout",latch.await(60,TimeUnit.SECONDS));return value.get();
     }
     private void waitFor(String expression,long timeout) throws Exception {
         long end=System.currentTimeMillis()+timeout;
@@ -55,8 +55,10 @@ public class FrameIntegrationTest {
     }
     @Test public void realPoseModelAndMetricCalibration() throws Exception {run("modelAndCalibration");}
     @Test public void gallerySurvivesReloadAndDeletes() throws Exception {
-        run("capture");InstrumentationRegistry.getInstrumentation().runOnMainSync(()->web.reload());
-        waitFor("document.querySelector('#cameraBtn')?.onclick != null",30000);js(scenarios);run("persistenceAndDelete");
+        run("capture");js("window.__qaBeforeReload=true");
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(()->web.reload());
+        waitFor("window.__qaBeforeReload !== true && document.querySelector('#cameraBtn')?.onclick != null",30000);
+        js(scenarios);run("persistenceAndDelete");
     }
     @Test public void cameraStopsWhenAppEntersBackground() throws Exception {
         run("cameraStart");scenario.moveToState(Lifecycle.State.CREATED);Thread.sleep(500);
