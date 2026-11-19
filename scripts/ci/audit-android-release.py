@@ -14,7 +14,13 @@ manifest=list((root/'intermediates/merged_manifests/release').rglob('AndroidMani
 assert len(manifest)==1,'Expected final merged release manifest'
 tree=ET.parse(manifest[0]);ns='{http://schemas.android.com/apk/res/android}'
 permissions=sorted(n.attrib[ns+'name'] for n in tree.findall('uses-permission'))
-assert permissions==['android.permission.CAMERA','android.permission.INTERNET'],permissions
+expected={'android.permission.CAMERA','android.permission.INTERNET'}
+# AndroidX Core declares an app-private signature permission for dynamic receivers.
+private_receiver='io.github.oyoungsoo97hub.framecamera.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'
+assert set(permissions)-{private_receiver}==expected,permissions
+if private_receiver in permissions:
+ definitions=[n for n in tree.findall('permission') if n.get(ns+'name')==private_receiver]
+ assert len(definitions)==1 and definitions[0].get(ns+'protectionLevel')=='signature','Receiver permission must stay signature-only'
 app=tree.find('application');assert app.get(ns+'debuggable','false')=='false','Debuggable release'
 assert app.get(ns+'allowBackup')=='false','Backup unexpectedly enabled'
 sdk=tree.find('uses-sdk');assert sdk.get(ns+'targetSdkVersion')=='36';assert sdk.get(ns+'minSdkVersion')=='24'

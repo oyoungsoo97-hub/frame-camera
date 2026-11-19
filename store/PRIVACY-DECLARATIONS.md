@@ -25,7 +25,7 @@ Proposed answer: **Data Not Collected** by the developer/app SDKs, based on the 
 
 Proposed Data safety: no developer/SDK collection or sharing under the [Google definitions](https://support.google.com/googleplay/android-developer/answer/10787469), subject to final binary and the user-directed sharing exception. No account creation, so there is no FRAME server account to delete. Local photo deletion is available; exported copies are outside FRAME's control. Do not claim independent security certification or universal encrypted storage. Apps and OS backups differ.
 
-Ads: no. App access: no login required. CAMERA and INTERNET are expected; source manifests do not request microphone, location, contacts or broad photo/storage access. Audit the **merged release manifest**, not only the source. Imported images use user selection; exports use app cache and the OS share flow. Android automatic backup is disabled; iOS backup follows OS settings.
+Ads: no. App access: no login required. CAMERA and INTERNET are expected, together with AndroidX’s app-private signature permission for dynamic receivers; source manifests do not request microphone, location, contacts or broad photo/storage access. Audit the **merged release manifest**, not only the source. Imported images use user selection; exports use app cache and the OS share flow. Android automatic backup is disabled; iOS backup follows OS settings.
 
 ## Policy publication
 
