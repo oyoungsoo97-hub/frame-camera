@@ -9,27 +9,40 @@ jobs:
   package:
     runs-on: ubuntu-latest
     env:
-      QA_RUN: '44533261380'
+      QA_RUN: '44538808448'
+      ANDROID_QA_RUN: '44541288444'
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Retrieve completed run evidence
         run: |
-          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$QA_RUN" > qa-run.json
-          python3 -c 'import json; r=json.load(open("qa-run.json")); assert r["status"]=="completed", "QA run is still running"'
-          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$QA_RUN/jobs?per_page=100" > qa-jobs.json
-          gh run download "$QA_RUN" --dir evidence
+          for SPEC in "$QA_RUN:qa" "$ANDROID_QA_RUN:android-qa"; do
+            RUN_ID=${SPEC%%:*}
+            PREFIX=${SPEC#*:}
+            gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID" > "$PREFIX-run.json"
+            gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID/jobs?per_page=100" > "$PREFIX-jobs.json"
+            QA_TESTED_SHA=$(python3 -c 'import json,sys; r=json.load(open(sys.argv[1])); assert r["status"]=="completed", "QA run is still running"; print(r["head_sha"])' "$PREFIX-run.json")
+            git diff --exit-code "$QA_TESTED_SHA" HEAD -- dist ios android package.json package-lock.json capacitor.config.json
+          done
+          python3 scripts/ci/verify-evidence-jobs.py
+          gh run download "$QA_RUN" --pattern 'iOS-QA-*' --pattern 'FRAME-unsigned-device-archive' --dir evidence
+          gh run download "$ANDROID_QA_RUN" --pattern 'Android-QA-*' --dir evidence
       - name: Package reports, native screenshots and unsigned build samples
         run: |
           mkdir -p release-evidence
           python3 scripts/ci/package-evidence.py
           cp evidence/FRAME-unsigned-device-archive/FRAME-unsigned.xcarchive.zip release-evidence/FRAME-2.1.0-unsigned.xcarchive.zip
           cp evidence/Android-QA-36-phone/android/app/build/outputs/bundle/release/app-release.aab release-evidence/FRAME-2.1.0-unsigned.aab
+          git archive --format=zip --prefix=FRAME/ HEAD -o release-evidence/FRAME-2.1.0-Web-iOS-Android-source.zip
+          (cd dist && zip -qr ../release-evidence/FRAME-2.1.0-HTML.zip .)
+          (cd store && zip -qr ../release-evidence/FRAME-2.1.0-Store-documents.zip .)
           cd release-evidence
           sha256sum * > SHA256SUMS.txt
       - name: Preserve evidence as a clearly marked prerelease
         run: |
           cat > notes.txt <<'NOTES'
-          Native QA evidence for FRAME 2.1.0, run 44533261380. This is a test-evidence package, not a store release or compatibility certification. Read qa-jobs.json for actual passed/failed jobs. Physical-device tests and production signing are still pending. The AAB and iOS device archive are unsigned; neither is an installable store release. All screenshots use the generated demo image, not a user's camera photos.
+          Native QA evidence for FRAME 2.1.0. iOS evidence: run 44538808448; Android evidence: run 44541288444. Production app files are identical across the two commits. Selected iOS and Android jobs must pass the evidence gate; the first run also contains an unresolved full-pixel fold emulator stall. The replacement fold test preserves logical viewport size at 906×1088 pixels / 210 dpi, not a physical Fold5 performance test. This is a test-evidence package, not a store release or compatibility certification. Read both job metadata files for actual job outcomes. Physical-device tests and production signing are still pending. The AAB and iOS device archive are unsigned; neither is an installable store release. All screenshots use the generated demo image, not a user's camera photos.
           NOTES
           gh release create "qa-evidence-$QA_RUN" release-evidence/* --target "$GITHUB_SHA" --prerelease --latest=false --title "FRAME 2.1.0 · QA evidence $QA_RUN" --notes-file notes.txt

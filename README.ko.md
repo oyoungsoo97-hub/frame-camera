@@ -1,3 +1,5 @@
+[2.1 스토어 준비 문서 및 네이티브 테스트 패키지](https://github.com/oyoungsoo97-hub/frame-camera/releases/tag/qa-evidence-44538808448)
+
 > **2.1.0 스토어 출시 준비:** [테스트 상태 및 남은 절차](store/README.md). 실제 기기의 카메라 테스트와 배포 서명이 아직 필요합니다. v2.0.0 배포 파일은 이전 버전입니다.
 
 # FRAME — 나만의 촬영 코치

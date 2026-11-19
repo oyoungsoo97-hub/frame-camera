@@ -13,25 +13,36 @@ Stand: 19. November 2026. **Noch keine Store-Freigabe und keine Zertifizierung a
 | iPad Pro 13-inch (M5) Simulator | **6/6 bestanden** | Echter WKWebView, iPad-Simulator; keine echte Kamera |
 | iOS-Gerätearchiv | **Build und Inhaltsprüfung bestanden** | Version 2.1.0 / Build 20100, iOS-26.5-SDK, Mindestziel 15.4, absichtlich unsigniert |
 | Android Release-AAB, Lint, App-/Test-APK | **Build und Inhaltsprüfung bestanden** | API 24 minimum, API 36 target, nicht debuggable, kein Mikrofon/Standort und keine nativen ELF-`.so`-Bibliotheken im Paket |
-| Android-Laufzeit API 31, API 36 Telefon/Fold-Größe | **Noch nicht freigegeben** | Emulatorabbruch in Lauf 44533261380; auch Folgelauf 44535083772 mit gleichem Grafikfehler; gezielter Guest-ANGLE-Prüflauf folgt |
+| Android 12 / API 31, Telefon 1080×1920, 420 dpi | **8/8 bestanden** | Echter Android-WebView, emulierte Kamera |
+| Android 16 / API 36, Telefon 1080×2400, 420 dpi | **8/8 bestanden** | Echter Android-WebView, emulierte Kamera |
+| Android 16 / API 36, großes Layout 906×1088, 210 dpi | **8/8 bestanden** | Gleiche logische Fläche wie 1812×2176/420 dpi; reduzierte Pixelzahl, keine Fold5-Leistungsmessung |
 | Lokale Browser-Prüfung | **Bestanden** | Chrome, 375×667, Demo-Modell, Galerie nach Neuladen, Datenschutz-/Supportnavigation de/en/ko |
 | Physische Geräte / Store-Signierung / Portalvalidierung | **NICHT AUSGEFÜHRT** | Keine verfügbaren Geräte, Entwicklerkonten oder Produktionsschlüssel |
 
-Referenz für die sechs iOS-Tests: [Lauf 44533261380](https://github.com/oyoungsoo97-hub/frame-camera/actions/runs/44533261380), Commit `e438dd47c1f9ebc57683b4875de881d7914e935f`. Der Gesamtlauf ist wegen Android rot; die beiden iOS-Jobs sowie ihre Archivprüfung sind separat erfolgreich. [Dauerhaftes QA-Paket](https://github.com/oyoungsoo97-hub/frame-camera/releases/tag/qa-evidence-44533261380) enthält die tatsächlichen Jobresultate, Protokolle, Paketprüfungen und iOS-Demo-Screenshots. Es ist keine Store-Veröffentlichung.
+## Herkunft der Nachweise
 
-Die native iOS-Suite prüft Start und lokale Assets, Dateisystem-/Share-Bridge, drei Sprachen/Layout, echtes MediaPipe-Modell mit cm/m-Kalibrierung, Aufnahme/Galerie/Neuladen/Löschen und die Warnung bei simuliert vollem Speicher. Ein weiterer Test erzeugt je Sprache zwei Screenshots aus dem echten App-Fenster. Die zwölf iPhone-/iPad-Bilder wurden visuell auf abgeschnittene Bedienelemente und übersetzte Inhalte geprüft. Sie verwenden ausschließlich das generierte Demofoto. Es sind QA-Entwürfe; finale Store-Screenshots werden aus dem freigegebenen Release-Build erzeugt.
+- **iOS:** [Lauf 44538808448](https://github.com/oyoungsoo97-hub/frame-camera/actions/runs/44538808448), Commit `1a80431d2850a072ffd5450731fc16d71a6db5e3`. Je sechs Tests auf iPhone und iPad; iPhone-Job einschließlich Gerätearchiv und Inhaltsprüfung. Der separate Android-Job mit voller Fold-Pixelzahl hing und ist kein erfolgreicher Test.
+- **Android:** [Lauf 44541288444](https://github.com/oyoungsoo97-hub/frame-camera/actions/runs/44541288444), Commit `519886c2a3b83c95fb35b4b6508f000bca1e0d4d`. Je acht Tests in drei Konfigurationen, insgesamt **24/24**. Die iOS-Jobs dieses gezielten Android-Laufs sind absichtlich übersprungen.
+- Die produktiven App-Dateien sind zwischen beiden Commits identisch. Lediglich Android-CI-Auflösung und Testprozess-Zeitlimit wurden verändert. Die Nachweise werden aus den tatsächlich erfolgreichen Jobs zusammengeführt; es wird kein vollständig grüner ursprünglicher Gesamtlauf behauptet.
+- Das [dauerhafte QA-Paket](https://github.com/oyoungsoo97-hub/frame-camera/releases/tag/qa-evidence-44538808448) enthält beide Jobmetadaten, Protokolle, Paketprüfungen, native Demo-Screenshots und unsignierte Buildbeispiele. Der Paketierungsschritt prüft die ausdrücklich benötigten erfolgreichen Jobs sowie die Gleichheit der produktiven App-Dateien. Es ist keine Store-Veröffentlichung.
+
+Die **12 iOS-Tests** prüfen Start und lokale Assets, Dateisystem-/Share-Bridge, drei Sprachen/Layout, echtes MediaPipe-Modell mit cm/m-Kalibrierung, Aufnahme/Galerie/Neuladen/Löschen und Speicherfehler bei manuellen wie automatischen Aufnahmen. Je ein Test erzeugt sechs native Screenshots. Die **24 Android-Tests** prüfen zusätzlich emulierte Kameraframes, kein Audio und Kamerastopp beim App-Wechsel. Die Systemberechtigung ist in Android vorab erteilt; echte Berechtigungsdialoge sind damit nicht abgenommen.
+
+Die Screenshot-Dateien entstehen aus echten nativen App-Fenstern mit dem generierten Demofoto, nicht aus echten Nutzerfotos. Sie sind QA-Entwürfe; finale Store-Screenshots werden aus dem akzeptierten Release-Build erzeugt. Einzelheiten und Größen: [Screenshot-Nachweis](../assets/NATIVE-SCREENSHOTS.md).
 
 ## Gefundene und behobene Fehler
 
 - **Safari/iOS 15:** Ein regulärer Ausdruck mit Lookbehind verhinderte das Parsen der Übersetzungsdatei. Durch kompatiblen Ausdruck ersetzt und mit Regressionstest abgesichert.
 - **Galerie:** Eine späte initiale Datenbankantwort konnte das erste neu aufgenommene Foto aus dem sichtbaren Zustand verdrängen. Aufnahme wartet jetzt auf den abgeschlossenen initialen Ladevorgang; Timeout-/Fehlerpfade sind begrenzt.
-- **Speicher voll:** Nicht dauerhaft gespeicherte Fotos bleiben exportierbar und erhalten im Vorschaudialog eine übersetzte Warnung. Transaktionsabschluss wird abgewartet. Die erste native iOS-Fehlerinjektion bestand. Zusätzlich pausiert die App bei Speicherfehlern jetzt automatische Aufnahmen und öffnet sofort die exportierbare Vorschau; dieser erweiterte Test wird erneut ausgeführt.
+- **Speicher voll:** Nicht dauerhaft gespeicherte Fotos bleiben exportierbar und erhalten im Vorschaudialog eine übersetzte Warnung. Transaktionsabschluss wird abgewartet. Bei Speicherfehlern pausiert die App automatische Aufnahmen und öffnet sofort die erste ungespeicherte, exportierbare Vorschau. Der erweiterte Test besteht auf beiden iOS- und allen drei Android-Konfigurationen.
 - **App-Wechsel:** Native Hintergrundereignisse stoppen Kamera/Sprachausgabe. iOS-Berechtigungsdialoge werden dabei nicht mit echtem Hintergrundbetrieb verwechselt. Android-Zurück behandelt Dialoge und Ansichten.
 - **Build-Konfiguration:** Kotlin-Abhängigkeitskonflikte, nicht übersetzbare Paketkennungen, der XCTest-Rückgabetyp und das explizite Archiv-Scheme wurden korrigiert.
 
 ## Android-Diagnose
 
-Im Lauf 44533261380 verschwanden die Emulatoren während der Ausführung aus ADB. Die gesicherten Protokolle zeigen wiederholte Fehler `GL2Encoder ... glFramebufferTextureLayer ... 0x502`; dies ist kein bestandener App-Test. Auch `software` allein beseitigte den Fehler nicht. Der nächste gezielte Android-Lauf aktiviert zusätzlich `GuestAngle`, damit GLES-Aufrufe im Gast in Vulkan übersetzt werden und den fehlerhaften GL-Encoder umgehen. Testinhalte und Produktionslogik werden nicht abgeschwächt. Host-/App-Protokolle bleiben erhalten und Diagnosebefehle haben ein Zeitlimit.
+Frühe Emulatorläufe brachen mit `GL2Encoder ... glFramebufferTextureLayer ... 0x502` ab. `GuestAngle` beseitigte diesen Absturz in den erfolgreichen Läufen. Zwei weitere Fehler lagen im Testablauf: Ein Galerie-Neuladetest griff auf das alte Dokument zu; die JavaScript-Rückrufzeit war für Software-Shader zu kurz. Der Test wartet jetzt auf das neue Dokument und erlaubt 60 statt 15 Sekunden für den Rückruf. Die funktionalen Assertions wurden nicht entfernt.
+
+Der Vollpixel-Lauf mit 1812×2176 bei 420 dpi blieb anschließend hängen. Ein gezielter Wiederholungslauf mit **906×1088 bei 210 dpi** besteht alle acht Tests und erhält dieselbe logische Fläche von ungefähr **690×829 dp**. Diese Anpassung reduziert die Last des Software-Renderers. Sie beweist weder Fold5-GPU-Leistung noch Scharnier-/Faltzustandswechsel oder reale Kameraeigenschaften. Der Testprozess ist nun auf zwölf Minuten begrenzt; Diagnoseprotokolle bleiben erhalten. Der ursprüngliche Hänger wird ausdrücklich als offene Grenze dokumentiert, nicht als bestandener Test gezählt.
 
 ## Nicht durch diese Tests bewiesen
 

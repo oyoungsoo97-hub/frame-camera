@@ -1,3 +1,5 @@
+[Store-Vorbereitung 2.1: Unterlagen und geprüfte native Pakete](https://github.com/oyoungsoo97-hub/frame-camera/releases/tag/qa-evidence-44538808448)
+
 # FRAME — Kamera-Coach
 
 **[Deutsch](README.md) · [English](README.en.md) · [한국어](README.ko.md)**

@@ -65,7 +65,7 @@ jobs:
         run: >-
           gh release create "$GITHUB_REF_NAME" release-assets/*
           --verify-tag --prerelease --title "FRAME $GITHUB_REF_NAME · Beta"
-          --notes-file docs/RELEASE-v2.0.0.md
+          --notes-file "docs/RELEASE-$GITHUB_REF_NAME.md"
   ios-simulator:
     runs-on: macos-26
     steps:

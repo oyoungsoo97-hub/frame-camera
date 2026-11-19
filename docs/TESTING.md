@@ -57,3 +57,7 @@ Record device model, OS/WebView version, app commit, date and actual result. Do 
 `.github/workflows/store-checks.yml` runs hosted XCTest in actual iPhone/iPad WKWebViews and Android instrumentation in actual emulator WebViews. See [the current report](../store/reports/TEST-REPORT.md). Tests exercise bundled model inference, all three languages, responsive layout, capture, persisted gallery deletion, native file operations and Android emulated camera/background behavior. Screenshots are captured from the native app windows with the generated demo image. They are not physical-camera photographs.
 
 Android permission is pre-granted in these automated tests; first-time system dialog, denial/recovery and actual OEM camera performance are explicitly real-device gates. iOS Simulator does not prove camera functionality. No test claims all devices are supported.
+
+### Software-rendered fold layout
+
+The fold-sized Android CI configuration uses 906×1088 pixels at 210 dpi. This preserves the approximately 690×829 dp viewport of 1812×2176 at 420 dpi, while reducing software-renderer load. The earlier full-pixel emulator run stalled. This is responsive-layout coverage, not physical Fold5 graphics, hinge, camera or performance validation. The native test assertions are unchanged; Android's JavaScript callback allowance is longer for software shader compilation.
