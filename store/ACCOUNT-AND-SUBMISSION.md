@@ -4,8 +4,8 @@ Stand der Recherche: 19. November 2026. Anforderungen unmittelbar vor Einreichun
 
 ## Apple
 
-1. [Apple Developer Program](https://developer.apple.com/programs/enroll/) als passende Einzelperson oder bestehende Organisation eröffnen. Bei Einzelpersonen erscheint der rechtliche Name als Verkäufer. [Apple nennt 99 USD jährlich](https://developer.apple.com/help/account/membership/program-enrollment/), gegebenenfalls in lokaler Währung und mit regionalen Abgaben.
-2. In App Store Connect den Vertrag für kostenpflichtige Apps sowie Bank-/Steuerdaten abschließen. [Preis einrichten](https://developer.apple.com/help/app-store-connect/manage-app-pricing/set-a-price/): EUR-Basispreis 2,99 €, Verkaufsländer bestimmen, andere Währungen kontrollieren. Keine In-App-Produkte anlegen.
+1. [Apple Developer Program](https://developer.apple.com/programs/enroll/) als Einzelperson unter Youngsoo Oh eröffnen (Entscheidung des Besitzers). Bei Einzelpersonen erscheint der rechtliche Name als Verkäufer. [Apple nennt 99 USD jährlich](https://developer.apple.com/help/account/membership/program-enrollment/), gegebenenfalls in lokaler Währung und mit regionalen Abgaben.
+2. In App Store Connect den Vertrag für kostenpflichtige Apps sowie Bank-/Steuerdaten abschließen. [Preis einrichten](https://developer.apple.com/help/app-store-connect/manage-app-pricing/set-a-price/): EUR-Basispreis 2,99 €, weltweite Verfügbarkeit dort aktivieren, wo Verkauf zulässig ist, und andere Währungen kontrollieren. Keine In-App-Produkte anlegen.
 3. Bundle-ID `io.github.oyoungsoo97hub.framecamera` im eigenen Team registrieren. Vor der ersten Veröffentlichung Verfügbarkeit prüfen. Falls Änderung nötig, Capacitor-Konfiguration, Xcode, Android und Test-/Workflow-Verweise gemeinsam ändern.
 4. `npm ci && npm run build && npx cap sync ios`; Xcode-Projekt öffnen. App-Target → Signing & Capabilities → eigenes Team; automatische Signierung aktivieren. Projektversion 2.1.0, Build 20100; für spätere Uploads Buildnummer erhöhen.
 5. Mit aktuellem Xcode ein echtes iOS-Archiv erstellen (Product → Archive), im Organizer **Validate App**, dann **Distribute App → App Store Connect**. Der CI-Build ohne Signierung ist kein uploadfähiges IPA. Nicht den Simulator-Build hochladen.
@@ -17,7 +17,7 @@ Seit 28. April 2026 verlangt Apple für iOS-Uploads Xcode 26 oder neuer mit iOS-
 
 ## Google Play
 
-1. [Play Console registrieren](https://support.google.com/googleplay/android-developer/answer/6112435): Google nennt einmalig 25 USD. Persönliches/Organisationskonto entsprechend tatsächlichem Status wählen, Identität und erforderlichen Gerätebesitz verifizieren. Zahlungsprofil und Verkäuferdaten für kostenpflichtige Apps ergänzen.
+1. [Play Console registrieren](https://support.google.com/googleplay/android-developer/answer/6112435): Google nennt einmalig 25 USD. Persönliches Konto gemäß Entscheidung des Besitzers wählen, Identität und erforderlichen Gerätebesitz verifizieren. Zahlungsprofil und Verkäuferdaten für kostenpflichtige Apps ergänzen.
 2. App von Anfang an als **kostenpflichtig**, Standardpreis 2,99 €, ohne Werbung anlegen. Nicht vorübergehend als kostenlose Produktions-App veröffentlichen, um Tests zu vereinfachen; die Monetarisierungsumstellung ist eingeschränkt. App-Name und Paketregistrierung prüfen.
 3. Dauerhaften **Uploadschlüssel** in Android Studio erstellen und verschlüsselt außerhalb des Repositories sichern. Play App Signing verwenden. Der Uploadschlüssel ist von Googles Auslieferungssignatur zu unterscheiden.
 4. Umgebungsvariablen `FRAME_KEYSTORE`, `FRAME_KEYSTORE_PASSWORD`, `FRAME_KEY_ALIAS`, `FRAME_KEY_PASSWORD` sicher setzen (z.B. CI-Secret oder lokale geschützte Umgebung; keine Literale in Shell-Verlauf/Logs). Dann:

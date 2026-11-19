@@ -12,5 +12,6 @@
   "support_email": null,
   "release_status": "preparation_only",
   "store_accounts_created": false,
-  "availability_regions": null
+  "availability_regions": "worldwide_where_store_sales_are_available",
+  "account_type": "individual"
 }

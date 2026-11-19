@@ -25,7 +25,7 @@ Die native iOS-Suite prüft Start und lokale Assets, Dateisystem-/Share-Bridge, 
 
 - **Safari/iOS 15:** Ein regulärer Ausdruck mit Lookbehind verhinderte das Parsen der Übersetzungsdatei. Durch kompatiblen Ausdruck ersetzt und mit Regressionstest abgesichert.
 - **Galerie:** Eine späte initiale Datenbankantwort konnte das erste neu aufgenommene Foto aus dem sichtbaren Zustand verdrängen. Aufnahme wartet jetzt auf den abgeschlossenen initialen Ladevorgang; Timeout-/Fehlerpfade sind begrenzt.
-- **Speicher voll:** Nicht dauerhaft gespeicherte Fotos bleiben exportierbar und erhalten im Vorschaudialog eine übersetzte Warnung. Transaktionsabschluss wird abgewartet. Native iOS-Fehlerinjektion bestanden.
+- **Speicher voll:** Nicht dauerhaft gespeicherte Fotos bleiben exportierbar und erhalten im Vorschaudialog eine übersetzte Warnung. Transaktionsabschluss wird abgewartet. Die erste native iOS-Fehlerinjektion bestand. Zusätzlich pausiert die App bei Speicherfehlern jetzt automatische Aufnahmen und öffnet sofort die exportierbare Vorschau; dieser erweiterte Test wird erneut ausgeführt.
 - **App-Wechsel:** Native Hintergrundereignisse stoppen Kamera/Sprachausgabe. iOS-Berechtigungsdialoge werden dabei nicht mit echtem Hintergrundbetrieb verwechselt. Android-Zurück behandelt Dialoge und Ansichten.
 - **Build-Konfiguration:** Kotlin-Abhängigkeitskonflikte, nicht übersetzbare Paketkennungen, der XCTest-Rückgabetyp und das explizite Archiv-Scheme wurden korrigiert.
 
@@ -45,6 +45,6 @@ Die vom Besitzer genannten Modellreihen sind **gewünschte Zielgeräte**, keine 
 
 ## Freigabe und Wiederholung
 
-`npm test`, `npm run check`, `node scripts/store-preflight.mjs`. Der Modus `--submission` beendet sich aktuell absichtlich mit Code 2: öffentliche Support-E-Mail, Konten/Verträge, Verkaufsländer, echte Geräteabnahme, sichere Signierung und finale Freigabe fehlen. Diesen Schutz nicht entfernen, um einen grünen Status zu erzeugen.
+`npm test`, `npm run check`, `node scripts/store-preflight.mjs`. Der Modus `--submission` beendet sich aktuell absichtlich mit Code 2: öffentliche Support-E-Mail, Konten/Verträge, Umsetzung der weltweiten Verfügbarkeit, echte Geräteabnahme, sichere Signierung und finale Freigabe fehlen. Diesen Schutz nicht entfernen, um einen grünen Status zu erzeugen.
 
 Die Mindestversionen sind konfigurierte Zielwerte, keine bestätigte Kompatibilitätsgarantie. Vor Veröffentlichung muss die unterste freigegebene Version tatsächlich getestet oder der unterstützte Bereich entsprechend eingeschränkt werden. Die [Konto-/Einreichungsanleitung](../ACCOUNT-AND-SUBMISSION.md) enthält die weiteren Schritte.

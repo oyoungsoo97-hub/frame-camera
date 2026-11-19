@@ -257,8 +257,14 @@ async function capture(useTimer=true){
     const winner=chooseBest(frames);frames.forEach((p,i)=>p.bestPick=count>1&&i===winner);
     for(const photo of frames){state.photos.unshift(photo);photo.persisted=await persistPhoto(photo);}updateCount();
     $('#flash').classList.remove('fire');void $('#flash').offsetWidth;$('#flash').classList.add('fire');
-    toast(count>1?'Three frames saved. Best pick selected.':state.mode==='demo'?'Demo photo added to your gallery.':'Captured. Open your gallery to save or share it.');
-    if(!state.auto)openPhoto(frames[winner]);
+    const unsaved=frames.find(photo=>photo.persisted===false);
+    if(unsaved){
+      state.auto=false;$('#autoBtn').setAttribute('aria-checked','false');
+      toast('This photo is only saved for this session. Export it now to keep it.');openPhoto(unsaved);
+    }else{
+      toast(count>1?'Three frames saved. Best pick selected.':state.mode==='demo'?'Demo photo added to your gallery.':'Captured. Open your gallery to save or share it.');
+      if(!state.auto)openPhoto(frames[winner]);
+    }
   }catch(e){console.error('Capture failed',e);toast('Could not capture the photo. Please try again.');}finally{state.busy=false;$('#shutter').disabled=false;$('#countdown').hidden=true;$('#burstStatus').hidden=true;state.readySince=0;}
 }
 async function openDatabase(){

@@ -56,10 +56,15 @@ window.__frameQARun = async function(name, platform) {
     const put=IDBObjectStore.prototype.put;
     IDBObjectStore.prototype.put=function(){throw new DOMException('Injected test quota failure','QuotaExceededError');};
     try {
-      click('#shutter');await wait(()=>$('#photoDialog').open,'Failed-storage photo preview missing');
-      await wait(()=>$('#capturedPreview').naturalWidth>0,'Unsaved photo cannot be exported');
-      assert(!$('#photoStorageWarning').hidden,'Storage failure warning is hidden');
-      assert($('#photoStorageWarning').textContent.includes('this session'),'Missing session-only notice');
+      for(const auto of [false,true]) {
+        if(($('#autoBtn').getAttribute('aria-checked')==='true')!==auto)click('#autoBtn');
+        click('#shutter');await wait(()=>$('#photoDialog').open,'Failed-storage photo preview missing; auto='+auto);
+        await wait(()=>$('#capturedPreview').naturalWidth>0,'Unsaved photo cannot be exported');
+        assert(!$('#photoStorageWarning').hidden,'Storage failure warning is hidden');
+        assert($('#photoStorageWarning').textContent.includes('this session'),'Missing session-only notice');
+        assert($('#autoBtn').getAttribute('aria-checked')==='false','Auto capture was not paused after storage failure');
+        $('#photoDialog').close();
+      }
     }finally{IDBObjectStore.prototype.put=put;$('#photoDialog').close();}
     return 'Injected storage failure retains an exportable photo and shows an explicit warning';
   }
