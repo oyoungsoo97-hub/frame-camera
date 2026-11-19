@@ -1,0 +1,39 @@
+import XCTest
+import UIKit
+import WebKit
+
+@MainActor
+final class FRAMEIntegrationTests: XCTestCase {
+    var web: WKWebView!
+    func findWeb(_ view: UIView) -> WKWebView? {
+        if let web = view as? WKWebView { return web }
+        for child in view.subviews { if let web = findWeb(child) { return web } }
+        return nil
+    }
+    func boot() async throws {
+        let deadline=Date().addingTimeInterval(30)
+        while Date()<deadline {
+            for scene in UIApplication.shared.connectedScenes {
+                if let scene=scene as? UIWindowScene {
+                    for window in scene.windows { if let found=findWeb(window) { web=found } }
+                }
+            }
+            if let web, (try? await web.evaluateJavaScript("Boolean(document.querySelector('#cameraBtn')?.onclick)")) as? Bool == true { break }
+            try await Task.sleep(nanoseconds:200_000_000)
+        }
+        XCTAssertNotNil(web,"The real app's WKWebView did not start")
+        let url=try XCTUnwrap(Bundle(for:Self.self).url(forResource:"scenarios",withExtension:"js"))
+        _ = try await web.evaluateJavaScript(String(contentsOf:url,encoding:.utf8))
+    }
+    func run(_ name:String) async throws {
+        let result=try await web.callAsyncJavaScript("return await window.__frameQARun(name, 'ios');",arguments:["name":name],in:nil,contentWorld:.page)
+        print("FRAME_QA \(name): \(String(describing:result))")
+    }
+    func testBundledAppAndNativePlugins() async throws { try await boot();try await run("boot");try await run("nativeFiles") }
+    func testLanguagesAndLayout() async throws { try await boot();try await run("languages");try await run("layout") }
+    func testRealPoseModelAndCalibration() async throws { try await boot();try await run("modelAndCalibration") }
+    func testGalleryPersistenceAndDeletion() async throws {
+        try await boot();try await run("capture");web.reload();
+        try await Task.sleep(nanoseconds:500_000_000);try await boot();try await run("persistenceAndDelete")
+    }
+}

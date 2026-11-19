@@ -5,6 +5,34 @@
 	};
 	objectVersion = 60;
 	objects = {
+		F10000000000000000000003 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FRAMEIntegrationTests.swift; sourceTree = "<group>"; };
+		F10000000000000000000005 = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = scenarios.js; sourceTree = "<group>"; };
+		F10000000000000000000002 = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = FRAMEIntegrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F10000000000000000000004 = {isa = PBXBuildFile; fileRef = F10000000000000000000003; };
+		F10000000000000000000006 = {isa = PBXBuildFile; fileRef = F10000000000000000000005; };
+		F10000000000000000000007 = {isa = PBXGroup; children = (F10000000000000000000003, F10000000000000000000005); path = FRAMEIntegrationTests; sourceTree = "<group>"; };
+		F10000000000000000000008 = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (F10000000000000000000004); runOnlyForDeploymentPostprocessing = 0; };
+		F10000000000000000000009 = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (F10000000000000000000006); runOnlyForDeploymentPostprocessing = 0; };
+		F1000000000000000000000A = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+		F1000000000000000000000E = {isa = PBXContainerItemProxy; containerPortal = 504EC2FC1FED79650016851F; proxyType = 1; remoteGlobalIDString = 504EC3031FED79650016851F; remoteInfo = App; };
+		F1000000000000000000000F = {isa = PBXTargetDependency; target = 504EC3031FED79650016851F; targetProxy = F1000000000000000000000E; };
+		F10000000000000000000001 = {isa = PBXNativeTarget; buildConfigurationList = F1000000000000000000000B; buildPhases = (F10000000000000000000008, F1000000000000000000000A, F10000000000000000000009); buildRules = (); dependencies = (F1000000000000000000000F); name = FRAMEIntegrationTests; productName = FRAMEIntegrationTests; productReference = F10000000000000000000002; productType = "com.apple.product-type.bundle.unit-test"; };
+		F1000000000000000000000B = {isa = XCConfigurationList; buildConfigurations = (F1000000000000000000000C, F1000000000000000000000D); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+		F1000000000000000000000C = {isa = XCBuildConfiguration; name = Debug; buildSettings = {
+ BUNDLE_LOADER = "$(TEST_HOST)"; TEST_HOST = "$(BUILT_PRODUCTS_DIR)/App.app/App";
+ CODE_SIGN_STYLE = Automatic; GENERATE_INFOPLIST_FILE = YES; IPHONEOS_DEPLOYMENT_TARGET = 15.4;
+ PRODUCT_BUNDLE_IDENTIFIER = io.github.oyoungsoo97hub.framecamera.tests; PRODUCT_NAME = "$(TARGET_NAME)";
+ SWIFT_VERSION = 5.0; TARGETED_DEVICE_FAMILY = "1,2"; SDKROOT = iphoneos;
+ LD_RUNPATH_SEARCH_PATHS = ("$(inherited)","@executable_path/Frameworks","@loader_path/Frameworks");
+ }; };
+		F1000000000000000000000D = {isa = XCBuildConfiguration; name = Release; buildSettings = {
+ BUNDLE_LOADER = "$(TEST_HOST)"; TEST_HOST = "$(BUILT_PRODUCTS_DIR)/App.app/App";
+ CODE_SIGN_STYLE = Automatic; GENERATE_INFOPLIST_FILE = YES; IPHONEOS_DEPLOYMENT_TARGET = 15.4;
+ PRODUCT_BUNDLE_IDENTIFIER = io.github.oyoungsoo97hub.framecamera.tests; PRODUCT_NAME = "$(TARGET_NAME)";
+ SWIFT_VERSION = 5.0; TARGETED_DEVICE_FAMILY = "1,2"; SDKROOT = iphoneos;
+ LD_RUNPATH_SEARCH_PATHS = ("$(inherited)","@executable_path/Frameworks","@loader_path/Frameworks");
+ }; };
+
 
 /* Begin PBXBuildFile section */
 		2FAD9763203C412B000D30F8 /* config.xml in Resources */ = {isa = PBXBuildFile; fileRef = 2FAD9762203C412B000D30F8 /* config.xml */; };
@@ -55,6 +83,7 @@
 			children = (
 				958DCC722DB07C7200EA8C5F /* debug.xcconfig */,
 				504EC3061FED79650016851F /* App */,
+				F10000000000000000000007,
 				504EC3051FED79650016851F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -63,6 +92,7 @@
 			isa = PBXGroup;
 			children = (
 				504EC3041FED79650016851F /* App.app */,
+				F10000000000000000000002,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -143,6 +173,7 @@
 			projectRoot = "";
 			targets = (
 				504EC3031FED79650016851F /* App */,
+				F10000000000000000000001,
 			);
 		};
 /* End PBXProject section */
