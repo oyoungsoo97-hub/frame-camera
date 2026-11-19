@@ -49,6 +49,10 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
+          cache: gradle
+          cache-dependency-path: |
+            android/**/*.gradle
+            android/gradle/wrapper/gradle-wrapper.properties
       - run: npm ci && npm run build && npx cap sync android
       - name: Enable emulator acceleration
         run: |
@@ -68,14 +72,12 @@ jobs:
           arch: x86_64
           profile: pixel_2
           disable-animations: true
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back emulated -camera-front emulated
+          emulator-options: -no-window -gpu swiftshader -feature -Vulkan -no-snapshot -noaudio -no-boot-anim -camera-back emulated -camera-front emulated
           script: |
             adb shell wm size ${{ matrix.size }}
             adb shell wm density ${{ matrix.density }}
             adb shell dumpsys webviewupdate > android-webview.txt
-            mkdir -p build/qa/native-screenshots
-            adb logcat -c
-            cd android && ./gradlew :app:connectedDebugAndroidTest --no-daemon; FRAME_TEST_EXIT=$?; cd ..; adb logcat -d > build/qa/android-logcat.txt; adb pull /sdcard/Android/data/io.github.oyoungsoo97hub.framecamera/files/. build/qa/native-screenshots/ || true; exit $FRAME_TEST_EXIT
+            bash scripts/ci/run-android-tests.sh
       - name: Capture diagnostics
         if: always()
         run: |
