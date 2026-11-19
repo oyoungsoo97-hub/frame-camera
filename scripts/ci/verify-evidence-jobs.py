@@ -13,3 +13,7 @@ for name in ["logic-and-assets", "android (31, phone, 1080x1920, 420)",
              "android (36, phone, 1080x2400, 420)", "android (36, fold, 906x1088, 210)"]:
     assert android[name]["conclusion"] == "success", f"Required Android job failed: {name}"
 print("Selected jobs passed: 2 iOS simulator configurations and 3 Android emulator configurations.")
+
+native = {job["name"]: job for job in jobs("native-build")}
+for name in ["android", "ios-simulator"]:
+    assert native[name]["conclusion"] == "success", f"Native build failed: {name}"

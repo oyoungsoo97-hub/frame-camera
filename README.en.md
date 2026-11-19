@@ -1,4 +1,4 @@
-[2.1 store preparation: documents and native QA packages](https://github.com/oyoungsoo97-hub/frame-camera/releases/tag/qa-evidence-44538808448)
+[2.1 store preparation: documents and native QA packages](https://github.com/oyoungsoo97-hub/frame-camera/releases/tag/qa-evidence-44538808448-r2)
 
 > **2.1.0 store preparation:** [Release gates, owner requirements and test plan](store/README.md). Native camera tests on physical devices and production signing remain pending. The v2.0.0 release is historical.
 
@@ -8,7 +8,7 @@
 
 FRAME coaches one person through framing, positioning and posing. Camera analysis runs on the device. The interface, guidance, errors, accessibility labels and speech support **German, English and Korean**.
 
-[Open the web app](https://oyoungsoo97-hub.github.io/frame-camera/) · [Native build downloads](https://github.com/oyoungsoo97-hub/frame-camera/releases/tag/v2.0.0)
+[Open the web app](https://oyoungsoo97-hub.github.io/frame-camera/) · [Native build downloads](https://github.com/oyoungsoo97-hub/frame-camera/releases/tag/qa-evidence-44538808448-r2)
 
 ## Included formats
 

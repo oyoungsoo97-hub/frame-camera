@@ -1,4 +1,4 @@
-[Store-Vorbereitung 2.1: Unterlagen und geprüfte native Pakete](https://github.com/oyoungsoo97-hub/frame-camera/releases/tag/qa-evidence-44538808448)
+[Store-Vorbereitung 2.1: Unterlagen und geprüfte native Pakete](https://github.com/oyoungsoo97-hub/frame-camera/releases/tag/qa-evidence-44538808448-r2)
 
 # FRAME — Kamera-Coach
 
@@ -7,7 +7,7 @@
 FRAME hilft einer Person, Position, Bildausschnitt und Pose beim Fotografieren anzupassen. Die Analyse läuft auf dem Gerät. Die Oberfläche und die Sprachanleitung unterstützen **Deutsch, Englisch und Koreanisch**.
 
 - [Web-App](https://oyoungsoo97-hub.github.io/frame-camera/)
-- [Native Builds und Downloads](https://github.com/oyoungsoo97-hub/frame-camera/releases/tag/v2.0.0)
+- [Native Builds und Downloads](https://github.com/oyoungsoo97-hub/frame-camera/releases/tag/qa-evidence-44538808448-r2)
 - [Vollständige Bau- und Release-Anleitung](docs/BUILD-AND-RELEASE.md)
 
 > Version 2.1.0 in Store-Vorbereitung / Beta. [Teststatus und offene Freigabeschritte](store/README.md). Die veröffentlichten v2.0.0-Dateien bleiben historische Builds. Web, iOS und Android teilen dieselbe Kameralogik. iOS und Android sind echte native Capacitor-Projekte mit lokal gebündelter Web-Oberfläche. Es wird keine entfernte Website in der App geladen. Ein iOS-Simulator-Build ist keine auf einem iPhone installierbare IPA; für das iPhone ist Apple-Signierung erforderlich.

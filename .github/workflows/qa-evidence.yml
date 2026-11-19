@@ -10,7 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       QA_RUN: '44538808448'
-      ANDROID_QA_RUN: '44541288444'
+      ANDROID_QA_RUN: '44543392670'
+      NATIVE_BUILD_RUN: '44542772436'
+      EVIDENCE_TAG: 'qa-evidence-44538808448-r2'
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
@@ -18,7 +20,7 @@ jobs:
           fetch-depth: 0
       - name: Retrieve completed run evidence
         run: |
-          for SPEC in "$QA_RUN:qa" "$ANDROID_QA_RUN:android-qa"; do
+          for SPEC in "$QA_RUN:qa" "$ANDROID_QA_RUN:android-qa" "$NATIVE_BUILD_RUN:native-build"; do
             RUN_ID=${SPEC%%:*}
             PREFIX=${SPEC#*:}
             gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID" > "$PREFIX-run.json"
@@ -29,12 +31,15 @@ jobs:
           python3 scripts/ci/verify-evidence-jobs.py
           gh run download "$QA_RUN" --pattern 'iOS-QA-*' --pattern 'FRAME-unsigned-device-archive' --dir evidence
           gh run download "$ANDROID_QA_RUN" --pattern 'Android-QA-*' --dir evidence
+          gh run download "$NATIVE_BUILD_RUN" --pattern 'FRAME-Android-debug' --pattern 'FRAME-iOS-Simulator' --dir native-evidence
       - name: Package reports, native screenshots and unsigned build samples
         run: |
           mkdir -p release-evidence
           python3 scripts/ci/package-evidence.py
           cp evidence/FRAME-unsigned-device-archive/FRAME-unsigned.xcarchive.zip release-evidence/FRAME-2.1.0-unsigned.xcarchive.zip
           cp evidence/Android-QA-36-phone/android/app/build/outputs/bundle/release/app-release.aab release-evidence/FRAME-2.1.0-unsigned.aab
+          cp native-evidence/FRAME-Android-debug/app-debug.apk release-evidence/FRAME-2.1.0-Android-debug.apk
+          cp native-evidence/FRAME-iOS-Simulator/FRAME-iOS-Simulator.app.zip release-evidence/FRAME-2.1.0-iOS-Simulator.app.zip
           git archive --format=zip --prefix=FRAME/ HEAD -o release-evidence/FRAME-2.1.0-Web-iOS-Android-source.zip
           (cd dist && zip -qr ../release-evidence/FRAME-2.1.0-HTML.zip .)
           (cd store && zip -qr ../release-evidence/FRAME-2.1.0-Store-documents.zip .)
@@ -43,6 +48,20 @@ jobs:
       - name: Preserve evidence as a clearly marked prerelease
         run: |
           cat > notes.txt <<'NOTES'
-          Native QA evidence for FRAME 2.1.0. iOS evidence: run 44538808448; Android evidence: run 44541288444. Production app files are identical across the two commits. Selected iOS and Android jobs must pass the evidence gate; the first run also contains an unresolved full-pixel fold emulator stall. The replacement fold test preserves logical viewport size at 906×1088 pixels / 210 dpi, not a physical Fold5 performance test. This is a test-evidence package, not a store release or compatibility certification. Read both job metadata files for actual job outcomes. Physical-device tests and production signing are still pending. The AAB and iOS device archive are unsigned; neither is an installable store release. All screenshots use the generated demo image, not a user's camera photos.
+          FRAME 2.1.0 is prepared for further Apple/Google store testing in German, English and Korean. Publisher decision: Youngsoo Oh, individual; €2.99 once; worldwide where store sales are allowed; no ads, subscription or in-app purchases.
+
+          Verified: 69 logic tests, 12 iOS simulator tests and 24 Android emulator tests. Production files are identical across the evidence commits. iOS: run 44538808448. Android: run 44543392670. Debug APK / simulator build: run 44542772436. Read all job metadata files and [the test report](https://github.com/oyoungsoo97-hub/frame-camera/blob/main/store/reports/TEST-REPORT.md).
+
+          The full-pixel fold emulator stalled. Its replacement preserves logical viewport size at 906×1088 pixels / 210 dpi; physical Fold5 graphics, hinge and camera behavior remain untested. The original overall run is cancelled, while the selected iOS jobs passed.
+
+          Downloads include HTML, complete source, store documents, 30 actual native demo screenshots in the QA evidence ZIP, debug APK, iOS simulator app and unsigned native build samples. SHA256SUMS.txt verifies the files.
+
+          **Not a store release:** physical-device acceptance, developer accounts, public support email, production signing and store review remain pending. The AAB and iOS device archive are unsigned. The debug APK is for Android testing only; the simulator app cannot be installed on an iPhone. Screenshots use the generated demo image, never user camera photos.
           NOTES
-          gh release create "qa-evidence-$QA_RUN" release-evidence/* --target "$GITHUB_SHA" --prerelease --latest=false --title "FRAME 2.1.0 · QA evidence $QA_RUN" --notes-file notes.txt
+          gh release create "$EVIDENCE_TAG" release-evidence/* --target "$GITHUB_SHA" --prerelease --latest=false --title "FRAME 2.1.0 · Store preparation and test evidence" --notes-file notes.txt
+          cat > superseded.txt <<'NOTES'
+          Superseded by the corrected QA package: https://github.com/oyoungsoo97-hub/frame-camera/releases/tag/qa-evidence-44538808448-r2
+
+          The tests in this earlier package passed as documented, but Android screenshots were lost when Gradle removed the test APK. The corrected package preserves and verifies six screenshots per Android configuration. This historical package is not a store release; all native samples are unsigned/testing only.
+          NOTES
+          gh release edit "qa-evidence-$QA_RUN" --notes-file superseded.txt
