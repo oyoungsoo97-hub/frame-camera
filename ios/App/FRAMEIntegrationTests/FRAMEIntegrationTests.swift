@@ -36,4 +36,20 @@ final class FRAMEIntegrationTests: XCTestCase {
         try await boot();try await run("capture");web.reload();
         try await Task.sleep(nanoseconds:500_000_000);try await boot();try await run("persistenceAndDelete")
     }
+    func testStoreScreenshots() async throws {
+        try await boot()
+        let directory=FileManager.default.urls(for:.documentDirectory,in:.userDomainMask)[0]
+        for language in ["de","en","ko"] {
+            for scene in ["guide","poses"] {
+                try await run("screenshot_\(language)_\(scene)")
+                let window=try XCTUnwrap(web.window)
+                let renderer=UIGraphicsImageRenderer(bounds:window.bounds)
+                let image=renderer.image { _ in window.drawHierarchy(in:window.bounds,afterScreenUpdates:true) }
+                let data=try XCTUnwrap(image.pngData())
+                try data.write(to:directory.appendingPathComponent("FRAME-qa-\(language)-\(scene).png"))
+                let attachment=XCTAttachment(image:image);attachment.name="\(language)-\(scene)";attachment.lifetime = .keepAlways;add(attachment)
+            }
+        }
+    }
+
 }

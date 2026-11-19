@@ -1,3 +1,12 @@
+# 2.1.0 — preparation, not a store release
+
+- Replaced regex lookbehind that prevented translations from parsing on Safari/iOS 15.
+- Set iOS minimum to 15.4 and Android WebView minimum to 90; added old-WebView update screen and viewport-height fallbacks.
+- Added native background camera shutdown and Android back handling; iOS permission alerts do not trigger native background shutdown.
+- Added three-language public privacy/support pages accessible in mobile Options.
+- Prepared paid-download metadata (€2.99), signing configuration, release audits and explicit device/account release gates.
+- Added native integration suites, generated-demo screenshots and a report distinguishing simulator/emulator checks from missing hardware acceptance.
+
 # Changelog
 
 ## 2.0.0 — 2026-11-19

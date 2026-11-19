@@ -20,3 +20,6 @@ ios/App/Pods/
 ios/DerivedData/
 *.xcuserstate
 xcuserdata/
+
+__pycache__/
+*.pyc

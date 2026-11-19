@@ -2,7 +2,7 @@
 
 ## Automated suite
 
-Run `npm test` (Node built-in test runner; no extra test framework). The current suite has 60 checks:
+Run `npm test` (Node built-in test runner; no extra test framework). The current suite has 61 checks:
 
 - Camera permission is requested immediately; timeout, denial, cancel and late-stream cleanup.
 - Video visibility/mute/inline ordering and bounded playback startup.
@@ -49,3 +49,9 @@ The development Mac used for initial v2 preparation has command-line tools but n
 - [ ] Signing, version upgrade and data retention for release packages.
 
 Record device model, OS/WebView version, app commit, date and actual result. Do not mark unchecked items complete based on source inspection or a simulator build.
+
+## Store preparation suite
+
+`.github/workflows/store-checks.yml` runs hosted XCTest in actual iPhone/iPad WKWebViews and Android instrumentation in actual emulator WebViews. See [the current report](../store/reports/TEST-REPORT.md). Tests exercise bundled model inference, all three languages, responsive layout, capture, persisted gallery deletion, native file operations and Android emulated camera/background behavior. Screenshots are captured from the native app windows with the generated demo image. They are not physical-camera photographs.
+
+Android permission is pre-granted in these automated tests; first-time system dialog, denial/recovery and actual OEM camera performance are explicitly real-device gates. iOS Simulator does not prove camera functionality. No test claims all devices are supported.

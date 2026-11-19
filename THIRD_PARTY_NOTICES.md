@@ -13,7 +13,7 @@ Official model assets:
 
 ## Capacitor and build tooling
 
-Capacitor Core/CLI/iOS/Android 8.6.2, Filesystem 8.1.5 and Share 8.0.3 are official Ionic/OutSystems packages. Their MIT license notices are retained in `licenses/`. The package lock records exact registry dependency resolutions and integrity values. esbuild 0.27.0 is build tooling under MIT; its notice is also retained.
+Capacitor Core/CLI/iOS/Android 8.6.2, App 8.1.2, Filesystem 8.1.5 and Share 8.0.3 are official Ionic/OutSystems packages. Their MIT license notices are retained in `licenses/` and copied into the distributed `dist/licenses/`. The package lock records exact registry dependency resolutions and integrity values. esbuild 0.27.0 is build tooling under MIT; its notice is also retained.
 
 Generated platform projects include the official Gradle wrapper and platform scaffolding. Their original package licenses remain applicable. GitHub Actions reference official actions for checkout, setup, artifact storage and Pages publishing.
 

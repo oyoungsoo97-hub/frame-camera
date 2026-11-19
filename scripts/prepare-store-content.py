@@ -3,6 +3,7 @@ import json,html
 root=Path(__file__).resolve().parent.parent
 store=root/'store';(store/'metadata').mkdir(parents=True,exist_ok=True)
 common={'developer':'Youngsoo Oh','version':'2.1.0','bundle_id':'io.github.oyoungsoo97hub.framecamera','business_model':'paid_download','base_price_eur':2.99,'ads':False,'in_app_purchases':False,'subscriptions':False,'support_url':'https://oyoungsoo97-hub.github.io/frame-camera/support.html','privacy_url':'https://oyoungsoo97-hub.github.io/frame-camera/privacy.html','support_email':None,'release_status':'preparation_only','store_accounts_created':False,'availability_regions':None}
+if (store/'release-config.json').exists():common.update(json.loads((store/'release-config.json').read_text()))
 (store/'release-config.json').write_text(json.dumps(common,ensure_ascii=False,indent=2)+'\n')
 rows={
 'de-DE':{'name':'FRAME – Kamera-Coach','subtitle':'Dein Foto. Dein bester Winkel.','short_description':'Live-Hilfe für Position, Bildausschnitt und Pose – direkt in deiner Kamera.','keywords':'kamera,foto,pose,porträt,komposition,reise,selbstauslöser','promotional_text':'Finde deinen Bildausschnitt, probiere eine Pose und folge der Live-Anleitung. Einmal kaufen, ohne Werbung und ohne In-App-Käufe.','description':'''Eine kleine Bewegung kann ein Foto verändern. FRAME hilft dir beim Ausrichten einer Person – mit einer Zielkontur, sichtbaren Richtungshinweisen und passenden Posen.

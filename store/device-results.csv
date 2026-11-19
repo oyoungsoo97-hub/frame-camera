@@ -1,0 +1,11 @@
+device,os_version,webview_version,app_build,commit,test_case,date,tester,result,issue,notes
+iPhone 7,,,,,ALL,,,NOT_RUN,,Desired target; no physical device currently available
+iPhone SE (generation TBD),,,,,ALL,,,NOT_RUN,,Desired target; no physical device currently available
+Current iPhone (model TBD),,,,,ALL,,,NOT_RUN,,Desired target; no physical device currently available
+iPhone Duo (model TBD),,,,,ALL,,,NOT_RUN,,Desired target; no physical device currently available
+iPad (model TBD),,,,,ALL,,,NOT_RUN,,Desired target; no physical device currently available
+Samsung Galaxy S10,,,,,ALL,,,NOT_RUN,,Desired target; no physical device currently available
+Samsung Galaxy Z Fold5,,,,,ALL,,,NOT_RUN,,Desired target; no physical device currently available
+Pixel midrange (model TBD),,,,,ALL,,,NOT_RUN,,Desired target; no physical device currently available
+Pixel current (model TBD),,,,,ALL,,,NOT_RUN,,Desired target; no physical device currently available
+Android API 24–30 (model TBD),,,,,ALL,,,NOT_RUN,,Desired target; no physical device currently available

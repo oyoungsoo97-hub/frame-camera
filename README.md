@@ -8,7 +8,7 @@ FRAME hilft einer Person, Position, Bildausschnitt und Pose beim Fotografieren a
 - [Native Builds und Downloads](https://github.com/oyoungsoo97-hub/frame-camera/releases/tag/v2.0.0)
 - [Vollständige Bau- und Release-Anleitung](docs/BUILD-AND-RELEASE.md)
 
-> Version 2.0.0 / Beta. Web, iOS und Android teilen dieselbe Kameralogik. iOS und Android sind echte native Capacitor-Projekte mit lokal gebündelter Web-Oberfläche. Es wird keine entfernte Website in der App geladen. Ein iOS-Simulator-Build ist keine auf einem iPhone installierbare IPA; für das iPhone ist Apple-Signierung erforderlich.
+> Version 2.1.0 in Store-Vorbereitung / Beta. [Teststatus und offene Freigabeschritte](store/README.md). Die veröffentlichten v2.0.0-Dateien bleiben historische Builds. Web, iOS und Android teilen dieselbe Kameralogik. iOS und Android sind echte native Capacitor-Projekte mit lokal gebündelter Web-Oberfläche. Es wird keine entfernte Website in der App geladen. Ein iOS-Simulator-Build ist keine auf einem iPhone installierbare IPA; für das iPhone ist Apple-Signierung erforderlich.
 
 ## Vorschau
 
@@ -23,7 +23,7 @@ Die Bilder zeigen die Demo mit hypothetischer Kalibrierung.
 | Format | Projekt / Ausgabe | Verwendung |
 |---|---|---|
 | HTML / PWA | `dist/index.html` mit allen lokalen Ressourcen | Statisches HTTPS-Hosting, iPhone Safari, Android Chrome |
-| Apple iOS | `ios/App/App.xcodeproj` | Xcode-Projekt, iOS 15+, Signierung im eigenen Apple-Team |
+| Apple iOS | `ios/App/App.xcodeproj` | Xcode-Projekt, iOS 15.4+, Signierung im eigenen Apple-Team |
 | iOS-Simulator | GitHub-Actions-Artefakt `FRAME-iOS-Simulator` | `.app.zip` für Xcode Simulator, nicht für ein echtes iPhone |
 | Android | `android/` | Android-Studio-/Gradle-Projekt, Android 7 / API 24+ |
 | Android-Testdatei | GitHub-Actions-Artefakt `FRAME-Android-debug` | Debug-APK nach erfolgreichem Build |

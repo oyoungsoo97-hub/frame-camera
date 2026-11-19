@@ -7,7 +7,7 @@ permissions:
   contents: read
 concurrency:
   group: store-checks-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 jobs:
   logic-and-assets:
     runs-on: ubuntu-latest
@@ -18,7 +18,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run build && npm test && npm run check
+      - run: npm run build && npm test && npm run check && node scripts/store-preflight.mjs
       - run: npm audit --omit=dev --audit-level=high
   android:
     runs-on: ubuntu-latest
@@ -57,7 +57,9 @@ jobs:
           sudo udevadm trigger --name-match=kvm
       - name: Build release bundle, lint and test APK
         working-directory: android
-        run: ./gradlew bundleRelease lintRelease assembleDebug assembleDebugAndroidTest --no-daemon
+        run: ./gradlew :app:bundleRelease :app:lintRelease :app:assembleDebug :app:assembleDebugAndroidTest --no-daemon
+      - name: Audit actual release bundle and merged manifest
+        run: python3 scripts/ci/audit-android-release.py
       - name: Run real Android WebView integration tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -71,12 +73,13 @@ jobs:
             adb shell wm size ${{ matrix.size }}
             adb shell wm density ${{ matrix.density }}
             adb shell dumpsys webviewupdate > android-webview.txt
-            cd android && ./gradlew connectedDebugAndroidTest --no-daemon
+            mkdir -p build/qa/native-screenshots
+            adb logcat -c
+            cd android && ./gradlew :app:connectedDebugAndroidTest --no-daemon; FRAME_TEST_EXIT=$?; cd ..; adb logcat -d > build/qa/android-logcat.txt; adb pull /sdcard/Android/data/io.github.oyoungsoo97hub.framecamera/files/. build/qa/native-screenshots/ || true; exit $FRAME_TEST_EXIT
       - name: Capture diagnostics
         if: always()
         run: |
           mkdir -p build/qa
-          adb logcat -d > build/qa/android-logcat.txt 2>/dev/null || true
           cp android-webview.txt build/qa/ 2>/dev/null || true
       - uses: actions/upload-artifact@v4
         if: always()
@@ -112,13 +115,19 @@ jobs:
       - name: Execute app integration tests in simulator
         run: |
           set -o pipefail
-          xcodebuild test -project ios/App/App.xcodeproj -scheme FrameTests -configuration Debug -destination "platform=iOS Simulator,id=$FRAME_SIMULATOR" -derivedDataPath build/ios-test -resultBundlePath build/qa/FRAME-${{ matrix.family }}.xcresult CODE_SIGNING_ALLOWED=NO | tee build/qa/xcode-tests.log
+          xcodebuild test -project ios/App/App.xcodeproj -scheme FrameTests -configuration Debug -destination "platform=iOS Simulator,id=$FRAME_SIMULATOR" -parallel-testing-enabled NO -derivedDataPath build/ios-test -resultBundlePath build/qa/FRAME-${{ matrix.family }}.xcresult CODE_SIGNING_ALLOWED=NO | tee build/qa/xcode-tests.log
       - name: Build unsigned device archive
         if: matrix.family == 'iPhone'
         run: xcodebuild archive -project ios/App/App.xcodeproj -scheme App -configuration Release -destination 'generic/platform=iOS' -archivePath build/FRAME-unsigned.xcarchive CODE_SIGNING_ALLOWED=NO
+      - name: Audit actual device archive
+        if: matrix.family == 'iPhone'
+        run: python3 scripts/ci/audit-ios-archive.py
       - name: Screenshot actual native app
         if: always()
         run: |
+          mkdir -p build/qa/native-screenshots
+          FRAME_APP_DATA=$(xcrun simctl get_app_container "$FRAME_SIMULATOR" io.github.oyoungsoo97hub.framecamera data) || true
+          if [ -n "$FRAME_APP_DATA" ]; then cp "$FRAME_APP_DATA"/Documents/FRAME-qa-*.png build/qa/native-screenshots/ 2>/dev/null || true; fi
           xcrun simctl launch "$FRAME_SIMULATOR" io.github.oyoungsoo97hub.framecamera || true
           xcrun simctl io "$FRAME_SIMULATOR" screenshot build/qa/native-${{ matrix.family }}.png || true
       - uses: actions/upload-artifact@v4

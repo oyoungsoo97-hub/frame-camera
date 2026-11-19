@@ -1,3 +1,5 @@
+> **2.1.0 스토어 출시 준비:** [테스트 상태 및 남은 절차](store/README.md). 실제 기기의 카메라 테스트와 배포 서명이 아직 필요합니다. v2.0.0 배포 파일은 이전 버전입니다.
+
 # FRAME — 나만의 촬영 코치
 
 **[Deutsch](README.md) · [English](README.en.md) · [한국어](README.ko.md)**
@@ -11,7 +13,7 @@ FRAME은 한 사람의 위치·구도·포즈를 실시간으로 안내하는 �
 | 플랫폼 | 파일 | 필요한 환경 |
 |---|---|---|
 | HTML / 웹 / PWA | `dist/` 전체 | HTTPS 정적 호스팅, Safari 또는 Chrome |
-| 애플 iOS | `ios/App/App.xcodeproj` | macOS, Xcode 26 이상, iOS 15 이상, 실제 아이폰용 Apple 서명 |
+| 애플 iOS | `ios/App/App.xcodeproj` | macOS, Xcode 26 이상, iOS 15.4 이상, 실제 아이폰용 Apple 서명 |
 | 안드로이드 | `android/` Gradle 프로젝트 | Android Studio, JDK 21, API 36 SDK; 실행은 API 24 이상 |
 | 자동 빌드 결과 | Android 디버그 APK, iOS 시뮬레이터 `.app.zip` | 해당 GitHub Actions 작업이 성공한 뒤 다운로드 |
 

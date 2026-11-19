@@ -73,6 +73,16 @@ window.__frameQARun = async function(name, platform) {
     $('#controlsDialog').close();await language('en');click('#exitFocusBtn');
     return {viewport:[innerWidth,innerHeight],shutter:[r.width,r.height,r.top,r.bottom]};
   }
+  if(name.startsWith('screenshot_')) {
+    const [,lang,scene]=name.split('_');
+    click('[data-view="studio"]');
+    if(scene==='guide') {
+      click('#sampleAnalyzeBtn');await wait(()=>$('#engineLabel').textContent==='Demo pose tracking','Screenshot model did not load');
+      click('#focusBtn');
+    } else { click('#exitFocusBtn');click('[data-view="poses"]'); }
+    await language(lang);await new Promise(r=>setTimeout(r,400));
+    return {scene,lang};
+  }
   if(name==='nativeFiles') {
     const call=(plugin,method,options)=>window.Capacitor.nativePromise(plugin,method,options);
     const path='frame-share/qa-verification.txt';

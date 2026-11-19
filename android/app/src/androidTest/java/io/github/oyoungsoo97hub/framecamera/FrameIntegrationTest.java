@@ -63,4 +63,16 @@ public class FrameIntegrationTest {
         scenario.moveToState(Lifecycle.State.RESUMED);run("cameraStopped");
     }
     @Test public void emulatedCameraStartsAndStops() throws Exception {run("camera");}
+    @Test public void storeScreenshots() throws Exception {
+        for(String language:new String[]{"de","en","ko"})for(String view:new String[]{"guide","poses"}){
+            run("screenshot_"+language+"_"+view);
+            android.graphics.Bitmap screenshot=InstrumentationRegistry.getInstrumentation().getUiAutomation().takeScreenshot();
+            assertNotNull("Native screenshot unavailable",screenshot);
+            java.io.File dir=InstrumentationRegistry.getInstrumentation().getTargetContext().getExternalFilesDir(null);
+            try(java.io.FileOutputStream output=new java.io.FileOutputStream(new java.io.File(dir,"FRAME-qa-"+language+"-"+view+".png"))){
+                assertTrue(screenshot.compress(android.graphics.Bitmap.CompressFormat.PNG,100,output));
+            }finally{screenshot.recycle();}
+        }
+    }
+
 }

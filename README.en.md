@@ -1,3 +1,5 @@
+> **2.1.0 store preparation:** [Release gates, owner requirements and test plan](store/README.md). Native camera tests on physical devices and production signing remain pending. The v2.0.0 release is historical.
+
 # FRAME — Your camera coach
 
 **[Deutsch](README.md) · [English](README.en.md) · [한국어](README.ko.md)**
@@ -11,7 +13,7 @@ FRAME coaches one person through framing, positioning and posing. Camera analysi
 | Platform | Included | Requirements |
 |---|---|---|
 | Web / HTML / PWA | `dist/`, including models and WebAssembly | Static HTTPS hosting; Safari or Chrome |
-| Apple iOS | `ios/App/App.xcodeproj`, Swift/Capacitor shell | macOS, Xcode 26+, iOS 15+; your Apple signing team for a real phone |
+| Apple iOS | `ios/App/App.xcodeproj`, Swift/Capacitor shell | macOS, Xcode 26+, iOS 15.4+; your Apple signing team for a real phone |
 | Android | `android/`, Java/Gradle/Capacitor shell | Android Studio, JDK 21, API 36 SDK; runtime Android API 24+ |
 | CI artifacts | Android debug APK and iOS simulator `.app.zip` | Available when the corresponding GitHub Actions job succeeds |
 

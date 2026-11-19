@@ -1,5 +1,15 @@
 apply plugin: 'com.android.application'
 
+def frameSigningNames = ['FRAME_KEYSTORE', 'FRAME_KEYSTORE_PASSWORD', 'FRAME_KEY_ALIAS', 'FRAME_KEY_PASSWORD']
+def frameSigningValues = frameSigningNames.collect { System.getenv(it) }
+def frameHasSigning = frameSigningValues.every { it != null && !it.isEmpty() }
+if (frameSigningValues.any { it != null && !it.isEmpty() } && !frameHasSigning) {
+    throw new GradleException('Incomplete FRAME signing environment; all four variables are required.')
+}
+if (project.findProperty('frameRequireSigning') == 'true' && !frameHasSigning) {
+    throw new GradleException('Store bundle requires the FRAME signing environment. No keys were supplied.')
+}
+
 android {
     namespace = "io.github.oyoungsoo97hub.framecamera"
     compileSdk = rootProject.ext.compileSdkVersion
@@ -16,8 +26,19 @@ android {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        if (frameHasSigning) {
+            release {
+                storeFile file(frameSigningValues[0])
+                storePassword frameSigningValues[1]
+                keyAlias frameSigningValues[2]
+                keyPassword frameSigningValues[3]
+            }
+        }
+    }
     buildTypes {
         release {
+            if (frameHasSigning) signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

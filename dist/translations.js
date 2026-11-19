@@ -1,5 +1,9 @@
 /* Reviewed source messages: Deutsch, English, 한국어. */
 export const messages = {
+  "Saved on this device. Export your favorites to keep them safe.": {"de": "Auf diesem Gerät gespeichert. Exportiere deine Lieblingsfotos zur Sicherung.", "ko": "이 기기에 저장돼요. 소중한 사진은 따로 내보내 보관하세요."},
+  "Camera frames and imported photos are analyzed on this device. They are not uploaded or sent to an external AI service.": {"de": "Kamerabilder und importierte Fotos werden auf diesem Gerät analysiert. Sie werden weder hochgeladen noch an einen externen KI-Dienst gesendet.", "ko": "카메라 영상과 가져온 사진은 이 기기에서 분석돼요. 업로드되거나 외부 AI 서비스로 전송되지 않아요."},
+  "Your gallery is stored locally. Clearing app or browser data may remove photos, so export the ones you want to keep.": {"de": "Deine Galerie wird lokal gespeichert. Beim Löschen von App- oder Browserdaten können Fotos verloren gehen. Exportiere wichtige Bilder.", "ko": "갤러리는 로컬에 저장돼요. 앱이나 브라우저 데이터를 지우면 사진이 사라질 수 있으니 중요한 사진은 내보내세요."},
+
   "FRAME — Your camera coach": {
     "de": "FRAME — Dein Kamera-Coach",
     "ko": "FRAME — 나만의 촬영 코치"

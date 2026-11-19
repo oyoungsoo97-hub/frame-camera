@@ -27,7 +27,7 @@ Keep the repository/project name stable. The old `trycloudflare.com` URLs were t
 
 ## iOS / Apple
 
-Requirements: macOS, Xcode 26+, iOS 15+, Node/npm. Swift Package Manager is used; CocoaPods is not required for this project.
+Requirements: macOS, Xcode 26+, iOS 15.4+, Node/npm. Swift Package Manager is used; CocoaPods is not required for this project.
 
 ```sh
 npm ci
