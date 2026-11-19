@@ -4,7 +4,7 @@
 
 FRAME coaches one person through framing, positioning and posing. Camera analysis runs on the device. The interface, guidance, errors, accessibility labels and speech support **German, English and Korean**.
 
-[Open the web app](https://oyoungsoo97-hub.github.io/frame-camera/) · [Native build downloads](https://github.com/oyoungsoo97-hub/frame-camera/actions/workflows/native.yml)
+[Open the web app](https://oyoungsoo97-hub.github.io/frame-camera/) · [Native build downloads](https://github.com/oyoungsoo97-hub/frame-camera/releases/tag/v2.0.0)
 
 ## Included formats
 

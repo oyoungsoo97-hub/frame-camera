@@ -5,16 +5,16 @@
 FRAME hilft einer Person, Position, Bildausschnitt und Pose beim Fotografieren anzupassen. Die Analyse läuft auf dem Gerät. Die Oberfläche und die Sprachanleitung unterstützen **Deutsch, Englisch und Koreanisch**.
 
 - [Web-App](https://oyoungsoo97-hub.github.io/frame-camera/)
-- [Native Builds und Downloads](https://github.com/oyoungsoo97-hub/frame-camera/actions/workflows/native.yml)
+- [Native Builds und Downloads](https://github.com/oyoungsoo97-hub/frame-camera/releases/tag/v2.0.0)
 - [Vollständige Bau- und Release-Anleitung](docs/BUILD-AND-RELEASE.md)
 
 > Version 2.0.0 / Beta. Web, iOS und Android teilen dieselbe Kameralogik. iOS und Android sind echte native Capacitor-Projekte mit lokal gebündelter Web-Oberfläche. Es wird keine entfernte Website in der App geladen. Ein iOS-Simulator-Build ist keine auf einem iPhone installierbare IPA; für das iPhone ist Apple-Signierung erforderlich.
 
 ## Vorschau
 
-| Deutsch | 한국어 |
-|---|---|
-| ![Deutsche Demo](docs/screenshots/de.jpg) | ![한국어 데모](docs/screenshots/ko.jpg) |
+| Deutsch | English | 한국어 |
+|---|---|---|
+| ![Deutsche Demo](docs/screenshots/de.jpg) | ![English demo](docs/screenshots/en.jpg) | ![한국어 데모](docs/screenshots/ko.jpg) |
 
 Die Bilder zeigen die Demo mit hypothetischer Kalibrierung.
 
@@ -107,6 +107,7 @@ Ein erfolgreicher Build belegt die Kompilierung, nicht die Kamerafunktion auf re
 - [Privacy and storage](docs/PRIVACY.md)
 - [Languages and translation workflow](docs/LOCALIZATION.md)
 - [Tests and device checklist](docs/TESTING.md)
+- [Verification record](docs/VERIFICATION.md)
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
 - [Third-party notices](THIRD_PARTY_NOTICES.md)
 - [Changelog](CHANGELOG.md)

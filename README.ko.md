@@ -4,7 +4,7 @@
 
 FRAME은 한 사람의 위치·구도·포즈를 실시간으로 안내하는 카메라 앱입니다. 영상은 기기에서 분석하며, **독일어·영어·한국어** UI와 안내·오류 메시지·접근성 라벨·음성 안내를 제공합니다.
 
-[웹 앱 열기](https://oyoungsoo97-hub.github.io/frame-camera/) · [네이티브 빌드 다운로드](https://github.com/oyoungsoo97-hub/frame-camera/actions/workflows/native.yml)
+[웹 앱 열기](https://oyoungsoo97-hub.github.io/frame-camera/) · [네이티브 빌드 다운로드](https://github.com/oyoungsoo97-hub/frame-camera/releases/tag/v2.0.0)
 
 ## 제공하는 형식
 

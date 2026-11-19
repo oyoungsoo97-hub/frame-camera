@@ -21,7 +21,7 @@ Do not expose `node_modules`, signing files or development configuration. Openin
 
 ### GitHub Pages
 
-The `Publish web app` workflow builds, tests, verifies and publishes `dist/`. Repository Settings → Pages → Source must be **GitHub Actions**. The intended project URL is `https://oyoungsoo97-hub.github.io/frame-camera/`; confirm the successful deployment before distributing it.
+The `Publish web app` workflow builds, tests, verifies and publishes `dist/`. Repository Settings → Pages → Source must be **GitHub Actions**. The published project URL is `https://oyoungsoo97-hub.github.io/frame-camera/`; confirm the successful deployment before distributing it.
 
 Keep the repository/project name stable. The old `trycloudflare.com` URLs were temporary and are not the permanent entry point. A custom domain is optional. A domain change creates a separate browser storage origin; export old photos before moving users.
 
@@ -89,8 +89,8 @@ The Android manifest requests CAMERA and INTERNET, marks camera hardware optiona
 ## GitHub Actions
 
 - `pages.yml`: static web build/test/deploy with `contents: read`, `pages: write`, `id-token: write`.
-- `native.yml`: Linux Android debug build and macOS 26 iOS simulator build, with read-only repository access.
-- Native artifacts are retained for 30 days. Download them from a successful workflow run; a failed job has no usable artifact.
+- `native.yml`: Linux Android debug build and macOS 26 iOS simulator build, with read-only repository access. Version tags also trigger a release job with repository write permission to publish those build outputs, the HTML/source ZIPs and checksums as a GitHub prerelease. No signing secrets are needed.
+- Workflow artifacts are retained for 30 days. Tagged release attachments persist until explicitly removed. Download the v2.0.0 beta from [Releases](https://github.com/oyoungsoo97-hub/frame-camera/releases/tag/v2.0.0). A failed build does not publish a release.
 - A build is not proof of real-device behavior. Review `docs/TESTING.md` before a public release.
 
 ## Updating a release
@@ -102,6 +102,7 @@ The Android manifest requests CAMERA and INTERNET, marks camera hardware optiona
 5. Run `npx cap sync` so native projects receive current web assets and plugin metadata.
 6. Push to main, inspect each workflow, download/test native artifacts and verify the production web URL.
 7. Update release notes and verification records with actual results. Do not label untested hardware behavior as verified.
+8. Update the notes-file path in `native.yml` for a new version, create its `v` tag and push the tag. The release job builds, tests and uploads a prerelease with checksums. It does not sign an iPhone IPA or submit to either store.
 
 ## References
 
