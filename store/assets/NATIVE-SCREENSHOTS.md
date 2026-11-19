@@ -17,3 +17,7 @@ The local Store Kit exports opaque RGB PNGs without rescaling or altering render
 Before store submission, capture the accepted signed release, remove beta branding only after acceptance, verify current Apple/Google size requirements and inspect the exact files uploaded. Native screenshots do not prove physical camera performance.
 
 Earlier Android 12 screenshots exposed a collapsed photo frame despite passing functional tests. The current build guards dynamic viewport CSS behind feature detection; geometry assertions now reject an empty photo/image area, and capture waits for analysis completion. Earlier QA packages are marked superseded.
+
+## Manual selection
+
+[The visual review](VISUAL-REVIEW.md) excludes three transient/clipped captures from store candidates. The local kit contains 27 selected drafts and three separately marked rejected captures; the raw evidence retains all 30. Final signed-release capture and real-device transition checks remain required.

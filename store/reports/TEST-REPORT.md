@@ -50,6 +50,10 @@ Die Screenshot-Übernahme wurde zusätzlich abgesichert: Gradle hatte die Test-A
 
 Derselbe vollständige Lauf erstellt zusätzlich ein Debug-APK und eine iOS-Simulator-App aus den getesteten produktiven App-Dateien. Diese Pakete dienen Tests und sind keine Store-Uploads.
 
+## Visuelle Abnahmegrenze
+
+Die [Sichtprüfung](../assets/VISUAL-REVIEW.md) bestätigt den behobenen Android-12-Bildrahmen. Von 30 aktuellen QA-Aufnahmen sind 27 als Entwürfe ausgewählt; drei mit Zwischenzustand bzw. angeschnittenem Auslöser sind ausgeschlossen. Der erste Vollbildwechsel auf echtem iPad/Fold und finale Screenshots aus dem signierten Release bleiben offen. Grüne DOM-Tests ersetzen diese Pixelprüfung nicht. Das mitgelieferte iOS-Simulatorpaket enthält ein XCTest-Plug-in; das Gerätearchiv wurde separat ohne Test-Bundles geprüft.
+
 ## Nicht durch diese Tests bewiesen
 
 - Reale Kameraqualität, Erstberechtigung/Verweigerung, Linsenwechsel, Sperrbildschirm, Telefonunterbrechungen, exaktes OEM-Exportverhalten und langfristige Wärme/Akkulaufzeit.
