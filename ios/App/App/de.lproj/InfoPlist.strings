@@ -1,0 +1,3 @@
+"NSCameraUsageDescription" = "FRAME nutzt die Kamera für Live-Posenhilfe und Fotos. Die Bilder werden auf diesem Gerät analysiert.";
+"NSPhotoLibraryAddUsageDescription" = "Speichere die von dir ausgewählten Fotos in deiner Fotomediathek.";
+"CFBundleDisplayName" = "FRAME";

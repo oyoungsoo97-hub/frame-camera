@@ -1,0 +1,14 @@
+{
+  "appId": "io.github.oyoungsoo97hub.framecamera",
+  "appName": "FRAME",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "ios": {
+    "contentInset": "always"
+  },
+  "android": {
+    "backgroundColor": "#111217"
+  }
+}
