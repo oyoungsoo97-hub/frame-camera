@@ -7,6 +7,14 @@ window.__frameQARun = async function(name, platform) {
     while(Date.now()-start<timeout) { if(await predicate())return; await new Promise(r=>setTimeout(r,150)); }
     throw Error(message+'; engine='+$('#engineLabel')?.textContent+'; status='+$('#statusMessage')?.textContent);
   };
+  const visibleFinder = () => {
+    const frame=$('#viewfinder').getBoundingClientRect();
+    const picture=$('#sampleImage').getBoundingClientRect();
+    assert(frame.width>=80&&frame.height>=100,'Photo frame collapsed: '+JSON.stringify({width:frame.width,height:frame.height}));
+    assert(frame.top>=0&&frame.bottom<=$('#shutter').getBoundingClientRect().top+1,'Photo frame overlaps capture controls');
+    assert(picture.width>=80&&picture.height>=100,'Photo image has no visible area');
+    return {width:frame.width,height:frame.height};
+  };
   const click = selector => { assert($(selector),'Missing '+selector); $(selector).click(); };
   const language = async code => {
     const select=$('.language-picker');select.value=code;select.dispatchEvent(new Event('change',{bubbles:true}));
@@ -80,6 +88,7 @@ window.__frameQARun = async function(name, platform) {
   }
   if(name==='layout') {
     click('[data-view="studio"]');click('#focusBtn');
+    const finder=visibleFinder();
     const r=$('#shutter').getBoundingClientRect();
     assert(r.width>=44&&r.height>=44,'Shutter touch target too small');
     assert(r.top>=0&&r.bottom<=innerHeight+1,'Shutter outside viewport');
@@ -88,16 +97,17 @@ window.__frameQARun = async function(name, platform) {
     assert($('#controlsDialog').open,'Options did not open');
     assert($('#controlsDialog').getBoundingClientRect().top>=-1,'Options top is unreachable');
     $('#controlsDialog').close();await language('en');click('#exitFocusBtn');
-    return {viewport:[innerWidth,innerHeight],shutter:[r.width,r.height,r.top,r.bottom]};
+    return {viewport:[innerWidth,innerHeight],finder,shutter:[r.width,r.height,r.top,r.bottom]};
   }
   if(name.startsWith('screenshot_')) {
     const [,lang,scene]=name.split('_');
     click('[data-view="studio"]');
     if(scene==='guide') {
-      click('#sampleAnalyzeBtn');await wait(()=>$('#engineLabel').textContent==='Demo pose tracking','Screenshot model did not load');
+      click('#sampleAnalyzeBtn');await wait(()=>$('#engineLabel').textContent==='Demo pose tracking'&&!$('#statusMessage').textContent.trim(),'Screenshot model did not finish');
       click('#focusBtn');
     } else { click('#exitFocusBtn');click('[data-view="poses"]'); }
     await language(lang);await new Promise(r=>setTimeout(r,400));
+    if(scene==='guide')visibleFinder();
     return {scene,lang};
   }
   if(name==='nativeFiles') {

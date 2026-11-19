@@ -33,3 +33,5 @@
 - Camera startup fixes validated by the user in iPhone Safari.
 - English royal-blue/white/black interface.
 - Visible movement arrows and calibrated cm/m estimates.
+
+- Fixed a visually confirmed collapsed full-screen photo frame on Android 12 / WebView 91: guard dynamic viewport units behind CSS feature detection. Native layout and screenshot tests now require a visible photo frame and decoded image, and screenshot capture waits for analysis to finish.

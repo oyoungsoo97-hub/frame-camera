@@ -1,10 +1,10 @@
-import {loadPhotoDatabase,writePhoto} from './gallery-storage.js?v=8';
-import {initLocalization,translateText,getLocale,getLanguage} from './i18n.js?v=8';
-import {isNative,shareNativePhoto,bindNativeLifecycle} from './native-bridge.js?v=8';
-import {styles,poses,cropRect,projectLandmarks,analyzePose,smoothLandmarks,clamp,posePacks} from './coach.js?v=8';
-import {requestCamera,playCamera} from './camera-session.js?v=8';
-import {createCalibration,sameCamera,estimateMetricGuide,metricPresentation,formatDistance} from './metric-guide.js?v=8';
-import {qualityStats,eyeState,chooseBest,canAutoShoot,analyzeScene} from './photo-analysis.js?v=8';
+import {loadPhotoDatabase,writePhoto} from './gallery-storage.js?v=9';
+import {initLocalization,translateText,getLocale,getLanguage} from './i18n.js?v=9';
+import {isNative,shareNativePhoto,bindNativeLifecycle} from './native-bridge.js?v=9';
+import {styles,poses,cropRect,projectLandmarks,analyzePose,smoothLandmarks,clamp,posePacks} from './coach.js?v=9';
+import {requestCamera,playCamera} from './camera-session.js?v=9';
+import {createCalibration,sameCamera,estimateMetricGuide,metricPresentation,formatDistance} from './metric-guide.js?v=9';
+import {qualityStats,eyeState,chooseBest,canAutoShoot,analyzeScene} from './photo-analysis.js?v=9';
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const state={view:'studio',mode:'demo',style:'travel',pose:'relax',mirror:false,facing:'environment',grid:true,guide:true,voice:false,auto:false,timer:0,ratio:3/4,raw:null,result:null,stream:null,model:null,modelPromise:null,modelMode:'IMAGE',lastVideoTime:-1,lastInference:0,lastSpoken:'',lastSpeechAt:0,readySince:0,autoLatched:false,busy:false,epoch:0,photo:null,photos:[],db:null,objectUrls:[],imageUrl:null,previewUrl:null,loop:0,missingSince:0,cameraStarting:false,cameraAbort:null};
 state.calibration=null;state.metricLostAt=0;
@@ -377,4 +377,4 @@ try{const prefs=JSON.parse(localStorage.getItem('frame-settings')??'null');if(pr
 renderPoses();selectStyle(state.style);$('#grid').hidden=!state.grid;$('#gridBtn').classList.toggle('selected',state.grid);$('#gridBtn').setAttribute('aria-pressed',state.grid);$('#guideBtn').setAttribute('aria-pressed',state.guide);drawGuide();renderScene();renderQuality();const storageReady=openDatabase();setSource('demo');setEngine('Ready when you are');renderResult({detected:false,ready:false,score:null,kind:'find',instruction:'Start with your camera.',detail:'Start your camera for live guidance, or try the demo to see how it works.',metrics:[]});
 initLocalization();
 window.addEventListener('frame-languagechange',()=>{state.lastSpoken='';if('speechSynthesis'in window)speechSynthesis.cancel();});
-if(!isNative&&'serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js?v=8',{updateViaCache:'none'}).catch(()=>{});
+if(!isNative&&'serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js?v=9',{updateViaCache:'none'}).catch(()=>{});

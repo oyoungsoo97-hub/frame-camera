@@ -1,4 +1,4 @@
-import {messages} from './translations.js?v=8';
+import {messages} from './translations.js?v=9';
 export const supportedLanguages=['de','en','ko'];
 export function resolveLanguage(saved,languages=['en']) {
   if(supportedLanguages.includes(saved))return saved;

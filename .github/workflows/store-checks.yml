@@ -97,6 +97,7 @@ jobs:
             android/app/build/reports/
             android/app/build/outputs/androidTest-results/
             android/app/build/outputs/bundle/release/
+            android/app/build/outputs/apk/debug/
             build/qa/
           retention-days: 30
   ios:
@@ -125,6 +126,15 @@ jobs:
         run: |
           set -o pipefail
           xcodebuild test -project ios/App/App.xcodeproj -scheme FrameTests -configuration Debug -destination "platform=iOS Simulator,id=$FRAME_SIMULATOR" -parallel-testing-enabled NO -derivedDataPath build/ios-test -resultBundlePath build/qa/FRAME-${{ matrix.family }}.xcresult CODE_SIGNING_ALLOWED=NO | tee build/qa/xcode-tests.log
+      - name: Package tested simulator app
+        if: matrix.family == 'iPhone'
+        run: ditto -c -k --sequesterRsrc --keepParent build/ios-test/Build/Products/Debug-iphonesimulator/App.app build/FRAME-iOS-Simulator.app.zip
+      - uses: actions/upload-artifact@v4
+        if: success() && matrix.family == 'iPhone'
+        with:
+          name: FRAME-iOS-Simulator
+          path: build/FRAME-iOS-Simulator.app.zip
+          retention-days: 30
       - name: Build unsigned device archive
         if: matrix.family == 'iPhone'
         run: xcodebuild archive -project ios/App/App.xcodeproj -scheme App -configuration Release -destination 'generic/platform=iOS' -archivePath build/FRAME-unsigned.xcarchive CODE_SIGNING_ALLOWED=NO
